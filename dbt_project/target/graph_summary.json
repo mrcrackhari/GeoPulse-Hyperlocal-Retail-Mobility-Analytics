@@ -1,0 +1,1 @@
+{"_invocation_id": "8c4f6d29-e593-43b4-a2ea-a5f665429378", "linked": {"0": {"name": "source.geopulse.geopulse_raw.GPS_PINGS", "type": "source", "succ": [1]}, "1": {"name": "model.geopulse.stg_gps_pings", "type": "model"}}}

@@ -1,0 +1,13 @@
+geopulse:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: DAGCDID-WV73577
+      user: HARIMAHAJAN108@GMAIL.COM
+      password: Harimahajan@1212 # <-- PUT YOUR REAL PASSWORD HERE
+      role: ACCOUNTADMIN
+      database: GEOPULSE_DB
+      warehouse: COMPUTE_WH
+      schema: DBT_STAGING
+      threads: 4
