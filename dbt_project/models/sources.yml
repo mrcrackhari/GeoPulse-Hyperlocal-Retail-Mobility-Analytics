@@ -6,3 +6,8 @@ sources:
     schema: RAW
     tables:
       - name: GPS_PINGS
+        columns:
+          - name: device_id
+          - name: lat
+          - name: lon
+          - name: timestamp

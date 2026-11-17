@@ -614,3 +614,709 @@ FROM GEOPULSE_DB.RAW.GPS_PINGS
 [0m10:42:09.749817 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001FE475CA150>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001FE4762AA30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001FE4762A8F0>]}
 [0m10:42:09.750239 [debug] [MainThread]: Flushing usage events
 [0m10:42:11.342492 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m19:41:50.096170 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000270A3935BE0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000270A088D6D0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000270A5FEBB10>]}
+
+
+============================== 19:41:50.107294 | 9515fce5-ffdc-4d65-bbc2-f20ef6268c80 ==============================
+[0m19:41:50.107294 [info ] [MainThread]: Running with dbt=1.13.0-b1
+[0m19:41:50.108194 [debug] [MainThread]: running dbt with arguments {'maximum_seed_size_mib': '1', 'no_print': 'None', 'version_check': 'True', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'static_parser': 'True', 'printer_width': '80', 'write_json': 'True', 'introspect': 'True', 'log_cache_events': 'False', 'empty': 'None', 'cache_selected_only': 'False', 'log_format': 'default', 'debug': 'False', 'fail_fast': 'False', 'profiles_dir': 'C:\\Users\\TUF\\GeoPulse Hyper-Local Retail Mobility Analytics\\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\\dbt_project', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'partial_parse': 'True', 'invocation_command': 'dbt test', 'hints_enabled': 'True', 'use_colors': 'True', 'use_experimental_parser': 'False', 'indirect_selection': 'eager', 'log_path': 'C:\\Users\\TUF\\GeoPulse Hyper-Local Retail Mobility Analytics\\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\\dbt_project\\logs'}
+[0m19:41:50.108646 [debug] [MainThread]: Tracking: tracking
+[0m19:41:59.776504 [debug] [MainThread]: Snowflake adapter: Setting snowflake.connector to ERROR (file logging only)
+[0m19:41:59.777395 [debug] [MainThread]: Snowflake adapter: Setting botocore to ERROR (file logging only)
+[0m19:41:59.777941 [debug] [MainThread]: Snowflake adapter: Setting boto3 to ERROR (file logging only)
+[0m19:42:10.972487 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '9515fce5-ffdc-4d65-bbc2-f20ef6268c80', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000270A3E2EC40>]}
+[0m19:42:12.305775 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '9515fce5-ffdc-4d65-bbc2-f20ef6268c80', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000270A1F37350>]}
+[0m19:42:12.372387 [info ] [MainThread]: Registered adapter: snowflake=1.12.5
+[0m19:42:15.759468 [debug] [MainThread]: checksum: a51ebfa8ab21d9183453db914e99d7c3fa9dc1599494d9d66466612897169981, vars: {}, profile: geopulse, target: dev, version: 1.13.0b1
+[0m19:42:20.623212 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 0 files changed.
+[0m19:42:20.623720 [debug] [MainThread]: Nothing changed, skipping partial parsing.
+[0m19:42:20.624046 [debug] [MainThread]: Partial parsing enabled, no changes found, skipping parsing
+[0m19:42:20.630593 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 3 unused configuration paths:
+- models.geopulse.intermediate
+- models.geopulse.staging
+- models.geopulse.marts
+[0m19:42:20.639371 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '9515fce5-ffdc-4d65-bbc2-f20ef6268c80', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000270C7AF1950>]}
+[0m19:42:20.799545 [debug] [MainThread]: Wrote artifact WritableManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\manifest.json
+[0m19:42:20.878300 [debug] [MainThread]: Wrote artifact SemanticManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\semantic_manifest.json
+[0m19:42:20.953973 [debug] [MainThread]: Wrote artifact OsiDocument to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\osi_document.json
+[0m19:42:21.000927 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '9515fce5-ffdc-4d65-bbc2-f20ef6268c80', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000270C7C2F4D0>]}
+[0m19:42:21.001770 [info ] [MainThread]: Found 1 model, 1 source, 563 macros
+[0m19:42:21.002492 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '9515fce5-ffdc-4d65-bbc2-f20ef6268c80', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000270C7C7D710>]}
+[0m19:42:21.006498 [warn ] [MainThread]: [[33mWARNING[0m]: Nothing to do. Try checking your model configs and model specification args
+[0m19:42:21.010932 [debug] [MainThread]: Command end result
+[0m19:42:21.059060 [debug] [MainThread]: Wrote artifact WritableManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\manifest.json
+[0m19:42:21.062275 [debug] [MainThread]: Wrote artifact SemanticManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\semantic_manifest.json
+[0m19:42:21.065690 [debug] [MainThread]: Wrote artifact OsiDocument to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\osi_document.json
+[0m19:42:21.070025 [debug] [MainThread]: Wrote artifact RunExecutionResult to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\run_results.json
+[0m19:42:21.071336 [debug] [MainThread]: Command `dbt test` succeeded at 19:42:21.071177 after 31.73 seconds
+[0m19:42:21.071795 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000270C7C657E0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000270A5F64DD0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000270C799CD10>]}
+[0m19:42:21.072267 [debug] [MainThread]: Flushing usage events
+[0m19:42:22.772140 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m19:44:49.699133 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A412645BE0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A40F50D6D0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A414CFBB10>]}
+
+
+============================== 19:44:49.708956 | 0b01bc03-7b11-4ee3-8254-ee80b95ef9a3 ==============================
+[0m19:44:49.708956 [info ] [MainThread]: Running with dbt=1.13.0-b1
+[0m19:44:49.714501 [debug] [MainThread]: running dbt with arguments {'maximum_seed_size_mib': '1', 'no_print': 'None', 'version_check': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'target_path': 'None', 'static_parser': 'True', 'printer_width': '80', 'write_json': 'True', 'introspect': 'True', 'log_cache_events': 'False', 'empty': 'None', 'cache_selected_only': 'False', 'log_format': 'default', 'debug': 'False', 'fail_fast': 'False', 'profiles_dir': 'C:\\Users\\TUF\\GeoPulse Hyper-Local Retail Mobility Analytics\\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\\dbt_project', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'partial_parse': 'True', 'invocation_command': 'dbt test', 'hints_enabled': 'True', 'indirect_selection': 'eager', 'use_experimental_parser': 'False', 'use_colors': 'True', 'log_path': 'C:\\Users\\TUF\\GeoPulse Hyper-Local Retail Mobility Analytics\\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\\dbt_project\\logs'}
+[0m19:44:49.714984 [debug] [MainThread]: Tracking: tracking
+[0m19:44:51.855202 [debug] [MainThread]: Snowflake adapter: Setting snowflake.connector to ERROR (file logging only)
+[0m19:44:51.855829 [debug] [MainThread]: Snowflake adapter: Setting botocore to ERROR (file logging only)
+[0m19:44:51.856394 [debug] [MainThread]: Snowflake adapter: Setting boto3 to ERROR (file logging only)
+[0m19:44:52.273185 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '0b01bc03-7b11-4ee3-8254-ee80b95ef9a3', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A412B3EC40>]}
+[0m19:44:52.377150 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '0b01bc03-7b11-4ee3-8254-ee80b95ef9a3', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A410C47350>]}
+[0m19:44:52.379650 [info ] [MainThread]: Registered adapter: snowflake=1.12.5
+[0m19:44:52.831885 [debug] [MainThread]: checksum: a51ebfa8ab21d9183453db914e99d7c3fa9dc1599494d9d66466612897169981, vars: {}, profile: geopulse, target: dev, version: 1.13.0b1
+[0m19:44:52.958301 [info ] [MainThread]: Unable to do partial parsing because a project config has changed
+[0m19:44:52.961009 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'partial_parser', 'label': '0b01bc03-7b11-4ee3-8254-ee80b95ef9a3', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A4367D1250>]}
+[0m19:44:55.038823 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 1 unused configuration paths:
+- models.geopulse.staging
+[0m19:44:55.046833 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '0b01bc03-7b11-4ee3-8254-ee80b95ef9a3', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A435EC32F0>]}
+[0m19:44:55.219313 [debug] [MainThread]: Wrote artifact WritableManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\manifest.json
+[0m19:44:55.222915 [debug] [MainThread]: Wrote artifact SemanticManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\semantic_manifest.json
+[0m19:44:55.417290 [debug] [MainThread]: Wrote artifact OsiDocument to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\osi_document.json
+[0m19:44:55.580880 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '0b01bc03-7b11-4ee3-8254-ee80b95ef9a3', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A437C19C50>]}
+[0m19:44:55.581605 [info ] [MainThread]: Found 1 model, 4 data tests, 1 source, 563 macros
+[0m19:44:55.582366 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '0b01bc03-7b11-4ee3-8254-ee80b95ef9a3', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A437C2E750>]}
+[0m19:44:55.586179 [info ] [MainThread]: 
+[0m19:44:55.587127 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m19:44:55.587962 [info ] [MainThread]: 
+[0m19:44:55.589249 [debug] [MainThread]: Acquiring new snowflake connection 'master'
+[0m19:44:55.591530 [debug] [ThreadPool]: Acquiring new snowflake connection 'list_GEOPULSE_DB_DBT_STAGING'
+[0m19:44:55.634907 [debug] [ThreadPool]: Using snowflake connection "list_GEOPULSE_DB_DBT_STAGING"
+[0m19:44:55.635692 [debug] [ThreadPool]: On list_GEOPULSE_DB_DBT_STAGING: show objects in GEOPULSE_DB.DBT_STAGING
+    limit 10000
+    
+
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "connection_name": "list_GEOPULSE_DB_DBT_STAGING"} */;
+[0m19:44:55.636243 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m19:44:57.846832 [debug] [ThreadPool]: SQL status: SUCCESS 1 in 2.211 seconds
+[0m19:44:57.873765 [debug] [ThreadPool]: Using snowflake connection "list_GEOPULSE_DB_DBT_STAGING"
+[0m19:44:57.874503 [debug] [ThreadPool]: On list_GEOPULSE_DB_DBT_STAGING: show user functions in GEOPULSE_DB.DBT_STAGING
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "connection_name": "list_GEOPULSE_DB_DBT_STAGING"} */
+[0m19:44:58.043614 [debug] [ThreadPool]: SQL status: SUCCESS 0 in 0.168 seconds
+[0m19:44:58.049140 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '0b01bc03-7b11-4ee3-8254-ee80b95ef9a3', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A437B85790>]}
+[0m19:44:58.064671 [debug] [Thread-4 (]: Began running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72
+[0m19:44:58.066247 [debug] [Thread-2 (]: Began running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c
+[0m19:44:58.067047 [debug] [Thread-1 (]: Began running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825
+[0m19:44:58.065593 [info ] [Thread-4 (]: 4 of 4 START test source_not_null_geopulse_raw_GPS_PINGS_timestamp ............. [RUN]
+[0m19:44:58.067920 [debug] [Thread-3 (]: Began running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2
+[0m19:44:58.068573 [info ] [Thread-2 (]: 2 of 4 START test source_not_null_geopulse_raw_GPS_PINGS_lat ................... [RUN]
+[0m19:44:58.069627 [info ] [Thread-1 (]: 1 of 4 START test source_not_null_geopulse_raw_GPS_PINGS_device_id ............. [RUN]
+[0m19:44:58.071075 [debug] [Thread-4 (]: Acquiring new snowflake connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72'
+[0m19:44:58.072908 [debug] [Thread-2 (]: Acquiring new snowflake connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c'
+[0m19:44:58.071877 [info ] [Thread-3 (]: 3 of 4 START test source_not_null_geopulse_raw_GPS_PINGS_lon ................... [RUN]
+[0m19:44:58.074170 [debug] [Thread-1 (]: Acquiring new snowflake connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825'
+[0m19:44:58.074827 [debug] [Thread-4 (]: Began compiling node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72
+[0m19:44:58.075386 [debug] [Thread-2 (]: Began compiling node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c
+[0m19:44:58.076274 [debug] [Thread-3 (]: Acquiring new snowflake connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2'
+[0m19:44:58.076881 [debug] [Thread-1 (]: Began compiling node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825
+[0m19:44:58.127236 [debug] [Thread-2 (]: Writing injected SQL for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c"
+[0m19:44:58.129855 [debug] [Thread-4 (]: Writing injected SQL for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72"
+[0m19:44:58.130445 [debug] [Thread-3 (]: Began compiling node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2
+[0m19:44:58.137371 [debug] [Thread-1 (]: Writing injected SQL for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825"
+[0m19:44:58.149223 [debug] [Thread-3 (]: Writing injected SQL for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2"
+[0m19:44:58.150732 [debug] [Thread-4 (]: Began executing node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72
+[0m19:44:58.151377 [debug] [Thread-2 (]: Began executing node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c
+[0m19:44:58.208826 [debug] [Thread-4 (]: Writing runtime sql for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72"
+[0m19:44:58.211388 [debug] [Thread-2 (]: Writing runtime sql for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c"
+[0m19:44:58.212075 [debug] [Thread-3 (]: Began executing node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2
+[0m19:44:58.212698 [debug] [Thread-1 (]: Began executing node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825
+[0m19:44:58.215097 [debug] [Thread-3 (]: Writing runtime sql for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2"
+[0m19:44:58.217979 [debug] [Thread-1 (]: Writing runtime sql for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825"
+[0m19:44:58.219954 [debug] [Thread-4 (]: Using snowflake connection "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72"
+[0m19:44:58.220449 [debug] [Thread-4 (]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72: select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select timestamp
+from GEOPULSE_DB.RAW.GPS_PINGS
+where timestamp is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "node_id": "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72"} */
+[0m19:44:58.220870 [debug] [Thread-4 (]: Opening a new connection, currently in state init
+[0m19:44:58.221798 [debug] [Thread-2 (]: Using snowflake connection "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c"
+[0m19:44:58.222405 [debug] [Thread-2 (]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c: select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select lat
+from GEOPULSE_DB.RAW.GPS_PINGS
+where lat is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "node_id": "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c"} */
+[0m19:44:58.222928 [debug] [Thread-2 (]: Opening a new connection, currently in state init
+[0m19:44:58.224690 [debug] [Thread-3 (]: Using snowflake connection "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2"
+[0m19:44:58.225179 [debug] [Thread-3 (]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2: select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select lon
+from GEOPULSE_DB.RAW.GPS_PINGS
+where lon is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "node_id": "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2"} */
+[0m19:44:58.225602 [debug] [Thread-3 (]: Opening a new connection, currently in state init
+[0m19:44:58.227023 [debug] [Thread-1 (]: Using snowflake connection "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825"
+[0m19:44:58.228047 [debug] [Thread-1 (]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825: select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select device_id
+from GEOPULSE_DB.RAW.GPS_PINGS
+where device_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "node_id": "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825"} */
+[0m19:44:58.228527 [debug] [Thread-1 (]: Opening a new connection, currently in state init
+[0m19:44:59.588501 [debug] [Thread-4 (]: Snowflake adapter: Snowflake query id: 01c87916-000e-327a-0003-180e0005204a
+[0m19:44:59.589134 [debug] [Thread-4 (]: Snowflake adapter: Snowflake error: 000904 (42000): SQL compilation error: error line 14 at position 7
+invalid identifier 'TIMESTAMP' (request_id=8acf4b14-3b9c-4680-9ec6-11fdd6106e15, sfqid=01c87916-000e-327a-0003-180e0005204a)
+[0m19:44:59.757834 [debug] [Thread-1 (]: Snowflake adapter: Snowflake query id: 01c87916-000e-327a-0003-180e0005204e
+[0m19:44:59.758770 [debug] [Thread-2 (]: Snowflake adapter: Snowflake query id: 01c87916-000e-327a-0003-180e00052052
+[0m19:44:59.759665 [debug] [Thread-1 (]: Snowflake adapter: Snowflake error: 000904 (42000): SQL compilation error: error line 14 at position 7
+invalid identifier 'DEVICE_ID' (request_id=23a0b135-0544-43e1-97d4-1bbbf05a018c, sfqid=01c87916-000e-327a-0003-180e0005204e)
+[0m19:44:59.760502 [debug] [Thread-2 (]: Snowflake adapter: Snowflake error: 000904 (42000): SQL compilation error: error line 14 at position 7
+invalid identifier 'LAT' (request_id=c0c9f28b-0ca2-4ebc-b288-34841f50fafd, sfqid=01c87916-000e-327a-0003-180e00052052)
+[0m19:44:59.816687 [debug] [Thread-3 (]: Snowflake adapter: Snowflake query id: 01c87916-000e-32ef-0003-180e00057006
+[0m19:44:59.817268 [debug] [Thread-3 (]: Snowflake adapter: Snowflake error: 000904 (42000): SQL compilation error: error line 14 at position 7
+invalid identifier 'LON' (request_id=983e8550-4bd1-477b-bcf1-dd3efb16a3c7, sfqid=01c87916-000e-32ef-0003-180e00057006)
+[0m19:45:00.159321 [debug] [Thread-3 (]: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_lon (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'LON' (request_id=983e8550-4bd1-477b-bcf1-dd3efb16a3c7, sfqid=01c87916-000e-32ef-0003-180e00057006)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lon.sql
+[0m19:45:00.160067 [error] [Thread-3 (]: 3 of 4 ERROR source_not_null_geopulse_raw_GPS_PINGS_lon ........................ [[31mERROR[0m in 2.08s]
+[0m19:45:00.161138 [debug] [Thread-3 (]: Finished running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2
+[0m19:45:00.162587 [debug] [Thread-7 (]: Marking all children of 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2' to be skipped because of status 'error'.  Reason: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_lon (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'LON' (request_id=983e8550-4bd1-477b-bcf1-dd3efb16a3c7, sfqid=01c87916-000e-32ef-0003-180e00057006)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lon.sql.
+[0m19:45:00.167698 [debug] [Thread-4 (]: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_timestamp (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'TIMESTAMP' (request_id=8acf4b14-3b9c-4680-9ec6-11fdd6106e15, sfqid=01c87916-000e-327a-0003-180e0005204a)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_timestamp.sql
+[0m19:45:00.174623 [debug] [Thread-2 (]: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_lat (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'LAT' (request_id=c0c9f28b-0ca2-4ebc-b288-34841f50fafd, sfqid=01c87916-000e-327a-0003-180e00052052)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lat.sql
+[0m19:45:00.179224 [debug] [Thread-1 (]: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_device_id (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'DEVICE_ID' (request_id=23a0b135-0544-43e1-97d4-1bbbf05a018c, sfqid=01c87916-000e-327a-0003-180e0005204e)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_device_id.sql
+[0m19:45:00.179856 [error] [Thread-4 (]: 4 of 4 ERROR source_not_null_geopulse_raw_GPS_PINGS_timestamp .................. [[31mERROR[0m in 2.11s]
+[0m19:45:00.180708 [error] [Thread-2 (]: 2 of 4 ERROR source_not_null_geopulse_raw_GPS_PINGS_lat ........................ [[31mERROR[0m in 2.11s]
+[0m19:45:00.182150 [debug] [Thread-4 (]: Finished running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72
+[0m19:45:00.181407 [error] [Thread-1 (]: 1 of 4 ERROR source_not_null_geopulse_raw_GPS_PINGS_device_id .................. [[31mERROR[0m in 2.11s]
+[0m19:45:00.183320 [debug] [Thread-2 (]: Finished running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c
+[0m19:45:00.183969 [debug] [Thread-7 (]: Marking all children of 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72' to be skipped because of status 'error'.  Reason: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_timestamp (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'TIMESTAMP' (request_id=8acf4b14-3b9c-4680-9ec6-11fdd6106e15, sfqid=01c87916-000e-327a-0003-180e0005204a)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_timestamp.sql.
+[0m19:45:00.184744 [debug] [Thread-1 (]: Finished running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825
+[0m19:45:00.185570 [debug] [Thread-7 (]: Marking all children of 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c' to be skipped because of status 'error'.  Reason: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_lat (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'LAT' (request_id=c0c9f28b-0ca2-4ebc-b288-34841f50fafd, sfqid=01c87916-000e-327a-0003-180e00052052)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lat.sql.
+[0m19:45:00.186344 [debug] [Thread-7 (]: Marking all children of 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825' to be skipped because of status 'error'.  Reason: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_device_id (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'DEVICE_ID' (request_id=23a0b135-0544-43e1-97d4-1bbbf05a018c, sfqid=01c87916-000e-327a-0003-180e0005204e)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_device_id.sql.
+[0m19:45:00.188237 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m19:45:00.188634 [debug] [MainThread]: Connection 'list_GEOPULSE_DB_DBT_STAGING' was left open.
+[0m19:45:00.188973 [debug] [MainThread]: On list_GEOPULSE_DB_DBT_STAGING: Close
+[0m19:45:00.607996 [debug] [MainThread]: Connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72' was left open.
+[0m19:45:00.608852 [debug] [MainThread]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72: Close
+[0m19:45:00.910089 [debug] [MainThread]: Connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c' was left open.
+[0m19:45:00.910723 [debug] [MainThread]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c: Close
+[0m19:45:01.301683 [debug] [MainThread]: Connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825' was left open.
+[0m19:45:01.302311 [debug] [MainThread]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825: Close
+[0m19:45:01.701375 [debug] [MainThread]: Connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2' was left open.
+[0m19:45:01.701991 [debug] [MainThread]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2: Close
+[0m19:45:02.138185 [info ] [MainThread]: 
+[0m19:45:02.139209 [info ] [MainThread]: Finished running 4 data tests in 0 hours 0 minutes and 6.55 seconds (6.55s).
+[0m19:45:02.141370 [debug] [MainThread]: Command end result
+[0m19:45:02.202486 [debug] [MainThread]: Wrote artifact WritableManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\manifest.json
+[0m19:45:02.207362 [debug] [MainThread]: Wrote artifact SemanticManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\semantic_manifest.json
+[0m19:45:02.211930 [debug] [MainThread]: Wrote artifact OsiDocument to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\osi_document.json
+[0m19:45:02.226985 [debug] [MainThread]: Wrote artifact RunExecutionResult to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\run_results.json
+[0m19:45:02.227431 [info ] [MainThread]: 
+[0m19:45:02.227976 [info ] [MainThread]: [31mCompleted with 4 errors, 0 partial successes, and 0 warnings:[0m
+[0m19:45:02.228714 [info ] [MainThread]: 
+[0m19:45:02.229775 [error] [MainThread]: [[31mERROR[0m]: in test source_not_null_geopulse_raw_GPS_PINGS_lon (models\sources.yml)
+[0m19:45:02.230988 [error] [MainThread]:   Database Error in test source_not_null_geopulse_raw_GPS_PINGS_lon (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'LON' (request_id=983e8550-4bd1-477b-bcf1-dd3efb16a3c7, sfqid=01c87916-000e-32ef-0003-180e00057006)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lon.sql
+[0m19:45:02.231768 [info ] [MainThread]: 
+[0m19:45:02.232541 [info ] [MainThread]:   compiled code at target\compiled\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lon.sql
+[0m19:45:02.233398 [info ] [MainThread]: 
+[0m19:45:02.234329 [error] [MainThread]: [[31mERROR[0m]: in test source_not_null_geopulse_raw_GPS_PINGS_timestamp (models\sources.yml)
+[0m19:45:02.234936 [error] [MainThread]:   Database Error in test source_not_null_geopulse_raw_GPS_PINGS_timestamp (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'TIMESTAMP' (request_id=8acf4b14-3b9c-4680-9ec6-11fdd6106e15, sfqid=01c87916-000e-327a-0003-180e0005204a)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_timestamp.sql
+[0m19:45:02.235874 [info ] [MainThread]: 
+[0m19:45:02.237001 [info ] [MainThread]:   compiled code at target\compiled\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_timestamp.sql
+[0m19:45:02.237797 [info ] [MainThread]: 
+[0m19:45:02.238477 [error] [MainThread]: [[31mERROR[0m]: in test source_not_null_geopulse_raw_GPS_PINGS_lat (models\sources.yml)
+[0m19:45:02.239359 [error] [MainThread]:   Database Error in test source_not_null_geopulse_raw_GPS_PINGS_lat (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'LAT' (request_id=c0c9f28b-0ca2-4ebc-b288-34841f50fafd, sfqid=01c87916-000e-327a-0003-180e00052052)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lat.sql
+[0m19:45:02.239990 [info ] [MainThread]: 
+[0m19:45:02.240873 [info ] [MainThread]:   compiled code at target\compiled\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lat.sql
+[0m19:45:02.241807 [info ] [MainThread]: 
+[0m19:45:02.243863 [error] [MainThread]: [[31mERROR[0m]: in test source_not_null_geopulse_raw_GPS_PINGS_device_id (models\sources.yml)
+[0m19:45:02.244535 [error] [MainThread]:   Database Error in test source_not_null_geopulse_raw_GPS_PINGS_device_id (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'DEVICE_ID' (request_id=23a0b135-0544-43e1-97d4-1bbbf05a018c, sfqid=01c87916-000e-327a-0003-180e0005204e)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_device_id.sql
+[0m19:45:02.245332 [info ] [MainThread]: 
+[0m19:45:02.245957 [info ] [MainThread]:   compiled code at target\compiled\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_device_id.sql
+[0m19:45:02.246451 [info ] [MainThread]: 
+[0m19:45:02.246988 [info ] [MainThread]: Done. PASS=0 WARN=0 ERROR=4 SKIP=0 NO-OP=0 REUSED=0 TOTAL=4
+[0m19:45:02.250729 [debug] [MainThread]: Command `dbt test` failed at 19:45:02.250414 after 13.13 seconds
+[0m19:45:02.251605 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A437EE0B50>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A437DA9E50>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A437DAA490>]}
+[0m19:45:02.252348 [debug] [MainThread]: Flushing usage events
+[0m19:45:03.981754 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m19:46:56.953719 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A3B96F1BE0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A3B65DD6D0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A3BBDABC50>]}
+
+
+============================== 19:46:56.962853 | 92882206-ed44-412f-8448-b5bb14bef79f ==============================
+[0m19:46:56.962853 [info ] [MainThread]: Running with dbt=1.13.0-b1
+[0m19:46:56.964301 [debug] [MainThread]: running dbt with arguments {'version_check': 'True', 'no_print': 'None', 'maximum_seed_size_mib': '1', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'static_parser': 'True', 'target_path': 'None', 'printer_width': '80', 'write_json': 'True', 'introspect': 'True', 'log_cache_events': 'False', 'empty': 'None', 'cache_selected_only': 'False', 'log_format': 'default', 'debug': 'False', 'fail_fast': 'False', 'profiles_dir': 'C:\\Users\\TUF\\GeoPulse Hyper-Local Retail Mobility Analytics\\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\\dbt_project', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'partial_parse': 'True', 'indirect_selection': 'eager', 'hints_enabled': 'True', 'use_colors': 'True', 'use_experimental_parser': 'False', 'invocation_command': 'dbt test', 'log_path': 'C:\\Users\\TUF\\GeoPulse Hyper-Local Retail Mobility Analytics\\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\\dbt_project\\logs'}
+[0m19:46:56.965105 [debug] [MainThread]: Tracking: tracking
+[0m19:46:59.590849 [debug] [MainThread]: Snowflake adapter: Setting snowflake.connector to ERROR (file logging only)
+[0m19:46:59.592046 [debug] [MainThread]: Snowflake adapter: Setting botocore to ERROR (file logging only)
+[0m19:46:59.592943 [debug] [MainThread]: Snowflake adapter: Setting boto3 to ERROR (file logging only)
+[0m19:47:00.268050 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '92882206-ed44-412f-8448-b5bb14bef79f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A3B9BEEC40>]}
+[0m19:47:00.385842 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '92882206-ed44-412f-8448-b5bb14bef79f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A3B7CE7350>]}
+[0m19:47:00.390606 [info ] [MainThread]: Registered adapter: snowflake=1.12.5
+[0m19:47:00.859674 [debug] [MainThread]: checksum: a51ebfa8ab21d9183453db914e99d7c3fa9dc1599494d9d66466612897169981, vars: {}, profile: geopulse, target: dev, version: 1.13.0b1
+[0m19:47:01.191273 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 1 files changed.
+[0m19:47:01.192004 [debug] [MainThread]: Partial parsing: updated file: geopulse://models\sources.yml
+[0m19:47:01.326011 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 1 unused configuration paths:
+- models.geopulse.staging
+[0m19:47:01.330986 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '92882206-ed44-412f-8448-b5bb14bef79f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A3DD770350>]}
+[0m19:47:01.498494 [debug] [MainThread]: Wrote artifact WritableManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\manifest.json
+[0m19:47:01.501774 [debug] [MainThread]: Wrote artifact SemanticManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\semantic_manifest.json
+[0m19:47:01.796966 [debug] [MainThread]: Wrote artifact OsiDocument to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\osi_document.json
+[0m19:47:01.876679 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '92882206-ed44-412f-8448-b5bb14bef79f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A3DD9D37A0>]}
+[0m19:47:01.877529 [info ] [MainThread]: Found 1 model, 4 data tests, 1 source, 563 macros
+[0m19:47:01.880183 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '92882206-ed44-412f-8448-b5bb14bef79f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A3DD94FE70>]}
+[0m19:47:01.883086 [info ] [MainThread]: 
+[0m19:47:01.891054 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m19:47:01.891795 [info ] [MainThread]: 
+[0m19:47:01.892642 [debug] [MainThread]: Acquiring new snowflake connection 'master'
+[0m19:47:01.894246 [debug] [ThreadPool]: Acquiring new snowflake connection 'list_GEOPULSE_DB_DBT_STAGING'
+[0m19:47:01.928720 [debug] [ThreadPool]: Using snowflake connection "list_GEOPULSE_DB_DBT_STAGING"
+[0m19:47:01.929234 [debug] [ThreadPool]: On list_GEOPULSE_DB_DBT_STAGING: show objects in GEOPULSE_DB.DBT_STAGING
+    limit 10000
+    
+
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "connection_name": "list_GEOPULSE_DB_DBT_STAGING"} */;
+[0m19:47:01.929675 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m19:47:03.451551 [debug] [ThreadPool]: SQL status: SUCCESS 1 in 1.522 seconds
+[0m19:47:03.464522 [debug] [ThreadPool]: Using snowflake connection "list_GEOPULSE_DB_DBT_STAGING"
+[0m19:47:03.465469 [debug] [ThreadPool]: On list_GEOPULSE_DB_DBT_STAGING: show user functions in GEOPULSE_DB.DBT_STAGING
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "connection_name": "list_GEOPULSE_DB_DBT_STAGING"} */
+[0m19:47:03.691551 [debug] [ThreadPool]: SQL status: SUCCESS 0 in 0.225 seconds
+[0m19:47:03.695057 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '92882206-ed44-412f-8448-b5bb14bef79f', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A3DDA4AA90>]}
+[0m19:47:03.705991 [debug] [Thread-1 (]: Began running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825
+[0m19:47:03.706609 [debug] [Thread-4 (]: Began running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72
+[0m19:47:03.707089 [debug] [Thread-3 (]: Began running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2
+[0m19:47:03.707673 [info ] [Thread-1 (]: 1 of 4 START test source_not_null_geopulse_raw_GPS_PINGS_device_id ............. [RUN]
+[0m19:47:03.708671 [debug] [Thread-2 (]: Began running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c
+[0m19:47:03.708305 [info ] [Thread-4 (]: 4 of 4 START test source_not_null_geopulse_raw_GPS_PINGS_timestamp ............. [RUN]
+[0m19:47:03.709976 [debug] [Thread-1 (]: Acquiring new snowflake connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825'
+[0m19:47:03.709338 [info ] [Thread-3 (]: 3 of 4 START test source_not_null_geopulse_raw_GPS_PINGS_lon ................... [RUN]
+[0m19:47:03.711048 [debug] [Thread-4 (]: Acquiring new snowflake connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72'
+[0m19:47:03.710521 [info ] [Thread-2 (]: 2 of 4 START test source_not_null_geopulse_raw_GPS_PINGS_lat ................... [RUN]
+[0m19:47:03.711551 [debug] [Thread-1 (]: Began compiling node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825
+[0m19:47:03.712122 [debug] [Thread-3 (]: Acquiring new snowflake connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2'
+[0m19:47:03.712533 [debug] [Thread-4 (]: Began compiling node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72
+[0m19:47:03.713066 [debug] [Thread-2 (]: Acquiring new snowflake connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c'
+[0m19:47:03.738881 [debug] [Thread-1 (]: Writing injected SQL for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825"
+[0m19:47:03.739428 [debug] [Thread-3 (]: Began compiling node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2
+[0m19:47:03.746603 [debug] [Thread-4 (]: Writing injected SQL for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72"
+[0m19:47:03.747141 [debug] [Thread-2 (]: Began compiling node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c
+[0m19:47:03.754397 [debug] [Thread-3 (]: Writing injected SQL for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2"
+[0m19:47:03.762063 [debug] [Thread-2 (]: Writing injected SQL for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c"
+[0m19:47:03.762991 [debug] [Thread-1 (]: Began executing node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825
+[0m19:47:03.793487 [debug] [Thread-1 (]: Writing runtime sql for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825"
+[0m19:47:03.794348 [debug] [Thread-3 (]: Began executing node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2
+[0m19:47:03.794998 [debug] [Thread-4 (]: Began executing node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72
+[0m19:47:03.797879 [debug] [Thread-3 (]: Writing runtime sql for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2"
+[0m19:47:03.800442 [debug] [Thread-4 (]: Writing runtime sql for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72"
+[0m19:47:03.801221 [debug] [Thread-2 (]: Began executing node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c
+[0m19:47:03.804611 [debug] [Thread-2 (]: Writing runtime sql for node "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c"
+[0m19:47:03.805581 [debug] [Thread-1 (]: Using snowflake connection "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825"
+[0m19:47:03.806364 [debug] [Thread-1 (]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825: select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select device_id
+from GEOPULSE_DB.RAW.GPS_PINGS
+where device_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "node_id": "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825"} */
+[0m19:47:03.806843 [debug] [Thread-1 (]: Opening a new connection, currently in state init
+[0m19:47:03.807943 [debug] [Thread-3 (]: Using snowflake connection "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2"
+[0m19:47:03.808658 [debug] [Thread-4 (]: Using snowflake connection "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72"
+[0m19:47:03.809198 [debug] [Thread-3 (]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2: select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select lon
+from GEOPULSE_DB.RAW.GPS_PINGS
+where lon is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "node_id": "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2"} */
+[0m19:47:03.810348 [debug] [Thread-4 (]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72: select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select timestamp
+from GEOPULSE_DB.RAW.GPS_PINGS
+where timestamp is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "node_id": "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72"} */
+[0m19:47:03.811123 [debug] [Thread-2 (]: Using snowflake connection "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c"
+[0m19:47:03.811675 [debug] [Thread-3 (]: Opening a new connection, currently in state init
+[0m19:47:03.812205 [debug] [Thread-4 (]: Opening a new connection, currently in state init
+[0m19:47:03.812636 [debug] [Thread-2 (]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c: select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select lat
+from GEOPULSE_DB.RAW.GPS_PINGS
+where lat is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "node_id": "test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c"} */
+[0m19:47:03.814984 [debug] [Thread-2 (]: Opening a new connection, currently in state init
+[0m19:47:05.549559 [debug] [Thread-1 (]: Snowflake adapter: Snowflake query id: 01c87919-000e-32ef-0003-180e00057012
+[0m19:47:05.550196 [debug] [Thread-1 (]: Snowflake adapter: Snowflake error: 000904 (42000): SQL compilation error: error line 14 at position 7
+invalid identifier 'DEVICE_ID' (request_id=45e5299b-a08c-468f-b72e-910f3b2d9111, sfqid=01c87919-000e-32ef-0003-180e00057012)
+[0m19:47:05.553847 [debug] [Thread-2 (]: Snowflake adapter: Snowflake query id: 01c87919-000e-32ef-0003-180e0005700e
+[0m19:47:05.554384 [debug] [Thread-2 (]: Snowflake adapter: Snowflake error: 000904 (42000): SQL compilation error: error line 14 at position 7
+invalid identifier 'LAT' (request_id=24fbf5c7-b3df-4765-b4ba-f53a3317e9cd, sfqid=01c87919-000e-32ef-0003-180e0005700e)
+[0m19:47:05.570671 [debug] [Thread-1 (]: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_device_id (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'DEVICE_ID' (request_id=45e5299b-a08c-468f-b72e-910f3b2d9111, sfqid=01c87919-000e-32ef-0003-180e00057012)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_device_id.sql
+[0m19:47:05.571398 [error] [Thread-1 (]: 1 of 4 ERROR source_not_null_geopulse_raw_GPS_PINGS_device_id .................. [[31mERROR[0m in 1.86s]
+[0m19:47:05.576076 [debug] [Thread-1 (]: Finished running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825
+[0m19:47:05.577770 [debug] [Thread-2 (]: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_lat (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'LAT' (request_id=24fbf5c7-b3df-4765-b4ba-f53a3317e9cd, sfqid=01c87919-000e-32ef-0003-180e0005700e)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lat.sql
+[0m19:47:05.578940 [debug] [Thread-7 (]: Marking all children of 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825' to be skipped because of status 'error'.  Reason: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_device_id (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'DEVICE_ID' (request_id=45e5299b-a08c-468f-b72e-910f3b2d9111, sfqid=01c87919-000e-32ef-0003-180e00057012)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_device_id.sql.
+[0m19:47:05.578393 [error] [Thread-2 (]: 2 of 4 ERROR source_not_null_geopulse_raw_GPS_PINGS_lat ........................ [[31mERROR[0m in 1.87s]
+[0m19:47:05.580660 [debug] [Thread-2 (]: Finished running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c
+[0m19:47:05.581486 [debug] [Thread-7 (]: Marking all children of 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c' to be skipped because of status 'error'.  Reason: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_lat (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'LAT' (request_id=24fbf5c7-b3df-4765-b4ba-f53a3317e9cd, sfqid=01c87919-000e-32ef-0003-180e0005700e)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lat.sql.
+[0m19:47:06.216931 [debug] [Thread-4 (]: Snowflake adapter: Snowflake query id: 01c87919-000e-327a-0003-180e00052056
+[0m19:47:06.218355 [debug] [Thread-4 (]: Snowflake adapter: Snowflake error: 000904 (42000): SQL compilation error: error line 14 at position 7
+invalid identifier 'TIMESTAMP' (request_id=6d972871-66ea-4afe-bf45-9b7e364bb54d, sfqid=01c87919-000e-327a-0003-180e00052056)
+[0m19:47:06.223955 [debug] [Thread-3 (]: Snowflake adapter: Snowflake query id: 01c87919-000e-32ef-0003-180e00057016
+[0m19:47:06.224869 [debug] [Thread-3 (]: Snowflake adapter: Snowflake error: 000904 (42000): SQL compilation error: error line 14 at position 7
+invalid identifier 'LON' (request_id=2e5fdbd8-011c-4a36-b48e-7f71813ee48c, sfqid=01c87919-000e-32ef-0003-180e00057016)
+[0m19:47:06.244167 [debug] [Thread-3 (]: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_lon (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'LON' (request_id=2e5fdbd8-011c-4a36-b48e-7f71813ee48c, sfqid=01c87919-000e-32ef-0003-180e00057016)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lon.sql
+[0m19:47:06.246883 [debug] [Thread-4 (]: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_timestamp (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'TIMESTAMP' (request_id=6d972871-66ea-4afe-bf45-9b7e364bb54d, sfqid=01c87919-000e-327a-0003-180e00052056)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_timestamp.sql
+[0m19:47:06.245023 [error] [Thread-3 (]: 3 of 4 ERROR source_not_null_geopulse_raw_GPS_PINGS_lon ........................ [[31mERROR[0m in 2.53s]
+[0m19:47:06.249968 [debug] [Thread-3 (]: Finished running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2
+[0m19:47:06.250709 [debug] [Thread-7 (]: Marking all children of 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2' to be skipped because of status 'error'.  Reason: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_lon (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'LON' (request_id=2e5fdbd8-011c-4a36-b48e-7f71813ee48c, sfqid=01c87919-000e-32ef-0003-180e00057016)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lon.sql.
+[0m19:47:06.247654 [error] [Thread-4 (]: 4 of 4 ERROR source_not_null_geopulse_raw_GPS_PINGS_timestamp .................. [[31mERROR[0m in 2.54s]
+[0m19:47:06.253429 [debug] [Thread-4 (]: Finished running node test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72
+[0m19:47:06.254286 [debug] [Thread-7 (]: Marking all children of 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72' to be skipped because of status 'error'.  Reason: Database Error in test source_not_null_geopulse_raw_GPS_PINGS_timestamp (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'TIMESTAMP' (request_id=6d972871-66ea-4afe-bf45-9b7e364bb54d, sfqid=01c87919-000e-327a-0003-180e00052056)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_timestamp.sql.
+[0m19:47:06.256338 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m19:47:06.256845 [debug] [MainThread]: Connection 'list_GEOPULSE_DB_DBT_STAGING' was left open.
+[0m19:47:06.257310 [debug] [MainThread]: On list_GEOPULSE_DB_DBT_STAGING: Close
+[0m19:47:06.674708 [debug] [MainThread]: Connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825' was left open.
+[0m19:47:06.675395 [debug] [MainThread]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_device_id.4754c0f825: Close
+[0m19:47:07.037277 [debug] [MainThread]: Connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72' was left open.
+[0m19:47:07.038005 [debug] [MainThread]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_timestamp.c4ce406f72: Close
+[0m19:47:07.316012 [debug] [MainThread]: Connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2' was left open.
+[0m19:47:07.316920 [debug] [MainThread]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lon.2bb153cde2: Close
+[0m19:47:07.749726 [debug] [MainThread]: Connection 'test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c' was left open.
+[0m19:47:07.750264 [debug] [MainThread]: On test.geopulse.source_not_null_geopulse_raw_GPS_PINGS_lat.35f00f133c: Close
+[0m19:47:08.195605 [info ] [MainThread]: 
+[0m19:47:08.196880 [info ] [MainThread]: Finished running 4 data tests in 0 hours 0 minutes and 6.30 seconds (6.30s).
+[0m19:47:08.199296 [debug] [MainThread]: Command end result
+[0m19:47:08.260713 [debug] [MainThread]: Wrote artifact WritableManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\manifest.json
+[0m19:47:08.265468 [debug] [MainThread]: Wrote artifact SemanticManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\semantic_manifest.json
+[0m19:47:08.269609 [debug] [MainThread]: Wrote artifact OsiDocument to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\osi_document.json
+[0m19:47:08.279873 [debug] [MainThread]: Wrote artifact RunExecutionResult to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\run_results.json
+[0m19:47:08.280507 [info ] [MainThread]: 
+[0m19:47:08.281495 [info ] [MainThread]: [31mCompleted with 4 errors, 0 partial successes, and 0 warnings:[0m
+[0m19:47:08.282256 [info ] [MainThread]: 
+[0m19:47:08.283019 [error] [MainThread]: [[31mERROR[0m]: in test source_not_null_geopulse_raw_GPS_PINGS_device_id (models\sources.yml)
+[0m19:47:08.283579 [error] [MainThread]:   Database Error in test source_not_null_geopulse_raw_GPS_PINGS_device_id (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'DEVICE_ID' (request_id=45e5299b-a08c-468f-b72e-910f3b2d9111, sfqid=01c87919-000e-32ef-0003-180e00057012)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_device_id.sql
+[0m19:47:08.284009 [info ] [MainThread]: 
+[0m19:47:08.284469 [info ] [MainThread]:   compiled code at target\compiled\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_device_id.sql
+[0m19:47:08.284859 [info ] [MainThread]: 
+[0m19:47:08.285343 [error] [MainThread]: [[31mERROR[0m]: in test source_not_null_geopulse_raw_GPS_PINGS_lat (models\sources.yml)
+[0m19:47:08.285796 [error] [MainThread]:   Database Error in test source_not_null_geopulse_raw_GPS_PINGS_lat (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'LAT' (request_id=24fbf5c7-b3df-4765-b4ba-f53a3317e9cd, sfqid=01c87919-000e-32ef-0003-180e0005700e)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lat.sql
+[0m19:47:08.286174 [info ] [MainThread]: 
+[0m19:47:08.286775 [info ] [MainThread]:   compiled code at target\compiled\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lat.sql
+[0m19:47:08.287206 [info ] [MainThread]: 
+[0m19:47:08.287665 [error] [MainThread]: [[31mERROR[0m]: in test source_not_null_geopulse_raw_GPS_PINGS_lon (models\sources.yml)
+[0m19:47:08.288106 [error] [MainThread]:   Database Error in test source_not_null_geopulse_raw_GPS_PINGS_lon (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'LON' (request_id=2e5fdbd8-011c-4a36-b48e-7f71813ee48c, sfqid=01c87919-000e-32ef-0003-180e00057016)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lon.sql
+[0m19:47:08.288488 [info ] [MainThread]: 
+[0m19:47:08.289054 [info ] [MainThread]:   compiled code at target\compiled\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_lon.sql
+[0m19:47:08.289526 [info ] [MainThread]: 
+[0m19:47:08.290120 [error] [MainThread]: [[31mERROR[0m]: in test source_not_null_geopulse_raw_GPS_PINGS_timestamp (models\sources.yml)
+[0m19:47:08.290807 [error] [MainThread]:   Database Error in test source_not_null_geopulse_raw_GPS_PINGS_timestamp (models\sources.yml)
+  000904 (42000): SQL compilation error: error line 14 at position 7
+  invalid identifier 'TIMESTAMP' (request_id=6d972871-66ea-4afe-bf45-9b7e364bb54d, sfqid=01c87919-000e-327a-0003-180e00052056)
+  compiled code at target\run\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_timestamp.sql
+[0m19:47:08.291427 [info ] [MainThread]: 
+[0m19:47:08.292037 [info ] [MainThread]:   compiled code at target\compiled\geopulse\models\sources.yml\source_not_null_geopulse_raw_GPS_PINGS_timestamp.sql
+[0m19:47:08.292580 [info ] [MainThread]: 
+[0m19:47:08.293212 [info ] [MainThread]: Done. PASS=0 WARN=0 ERROR=4 SKIP=0 NO-OP=0 REUSED=0 TOTAL=4
+[0m19:47:08.294750 [debug] [MainThread]: Command `dbt test` failed at 19:47:08.294589 after 11.77 seconds
+[0m19:47:08.295216 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A3BBD24DD0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A3DDAB19C0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001A3DDAB2E60>]}
+[0m19:47:08.295655 [debug] [MainThread]: Flushing usage events
+[0m19:47:10.003051 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m19:49:23.714336 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000017EC0BE1BE0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000017EBDA7D6D0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000017EC329BB10>]}
+
+
+============================== 19:49:23.721183 | e456fa93-3fa8-4789-9c3a-805fb700559a ==============================
+[0m19:49:23.721183 [info ] [MainThread]: Running with dbt=1.13.0-b1
+[0m19:49:23.722194 [debug] [MainThread]: running dbt with arguments {'version_check': 'True', 'no_print': 'None', 'static_parser': 'True', 'target_path': 'None', 'maximum_seed_size_mib': '1', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'printer_width': '80', 'write_json': 'True', 'empty': 'None', 'log_cache_events': 'False', 'introspect': 'True', 'cache_selected_only': 'False', 'fail_fast': 'False', 'debug': 'False', 'log_format': 'default', 'profiles_dir': 'C:\\Users\\TUF\\GeoPulse Hyper-Local Retail Mobility Analytics\\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\\dbt_project', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'partial_parse': 'True', 'use_colors': 'True', 'hints_enabled': 'True', 'invocation_command': 'dbt test', 'use_experimental_parser': 'False', 'indirect_selection': 'eager', 'log_path': 'C:\\Users\\TUF\\GeoPulse Hyper-Local Retail Mobility Analytics\\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\\dbt_project\\logs'}
+[0m19:49:23.722641 [debug] [MainThread]: Tracking: tracking
+[0m19:49:26.293432 [debug] [MainThread]: Snowflake adapter: Setting snowflake.connector to ERROR (file logging only)
+[0m19:49:26.294069 [debug] [MainThread]: Snowflake adapter: Setting botocore to ERROR (file logging only)
+[0m19:49:26.294496 [debug] [MainThread]: Snowflake adapter: Setting boto3 to ERROR (file logging only)
+[0m19:49:26.785419 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': 'e456fa93-3fa8-4789-9c3a-805fb700559a', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000017EC10DEC40>]}
+[0m19:49:26.867192 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': 'e456fa93-3fa8-4789-9c3a-805fb700559a', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000017EBF1D7350>]}
+[0m19:49:26.882557 [info ] [MainThread]: Registered adapter: snowflake=1.12.5
+[0m19:49:27.390861 [debug] [MainThread]: checksum: a51ebfa8ab21d9183453db914e99d7c3fa9dc1599494d9d66466612897169981, vars: {}, profile: geopulse, target: dev, version: 1.13.0b1
+[0m19:49:27.696410 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 1 files added, 1 files changed.
+[0m19:49:27.697130 [debug] [MainThread]: Partial parsing: added file: geopulse://tests\assert_no_nulls_in_gps.sql
+[0m19:49:27.697794 [debug] [MainThread]: Partial parsing: updated file: geopulse://models\sources.yml
+[0m19:49:28.529210 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 1 unused configuration paths:
+- models.geopulse.staging
+[0m19:49:28.534381 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': 'e456fa93-3fa8-4789-9c3a-805fb700559a', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000017EE4D82A50>]}
+[0m19:49:28.681475 [debug] [MainThread]: Wrote artifact WritableManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\manifest.json
+[0m19:49:28.684777 [debug] [MainThread]: Wrote artifact SemanticManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\semantic_manifest.json
+[0m19:49:28.737489 [debug] [MainThread]: Wrote artifact OsiDocument to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\osi_document.json
+[0m19:49:28.782636 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': 'e456fa93-3fa8-4789-9c3a-805fb700559a', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000017EE624D8B0>]}
+[0m19:49:28.783256 [info ] [MainThread]: Found 1 model, 1 test, 1 source, 563 macros
+[0m19:49:28.786282 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'e456fa93-3fa8-4789-9c3a-805fb700559a', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000017EE4E81710>]}
+[0m19:49:28.788512 [info ] [MainThread]: 
+[0m19:49:28.791449 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m19:49:28.792551 [info ] [MainThread]: 
+[0m19:49:28.793578 [debug] [MainThread]: Acquiring new snowflake connection 'master'
+[0m19:49:28.795161 [debug] [ThreadPool]: Acquiring new snowflake connection 'list_GEOPULSE_DB_DBT_STAGING'
+[0m19:49:28.820482 [debug] [ThreadPool]: Using snowflake connection "list_GEOPULSE_DB_DBT_STAGING"
+[0m19:49:28.820974 [debug] [ThreadPool]: On list_GEOPULSE_DB_DBT_STAGING: show objects in GEOPULSE_DB.DBT_STAGING
+    limit 10000
+    
+
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "connection_name": "list_GEOPULSE_DB_DBT_STAGING"} */;
+[0m19:49:28.821319 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m19:49:30.278283 [debug] [ThreadPool]: SQL status: SUCCESS 1 in 1.457 seconds
+[0m19:49:30.292413 [debug] [ThreadPool]: Using snowflake connection "list_GEOPULSE_DB_DBT_STAGING"
+[0m19:49:30.292928 [debug] [ThreadPool]: On list_GEOPULSE_DB_DBT_STAGING: show user functions in GEOPULSE_DB.DBT_STAGING
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "connection_name": "list_GEOPULSE_DB_DBT_STAGING"} */
+[0m19:49:30.460602 [debug] [ThreadPool]: SQL status: SUCCESS 0 in 0.167 seconds
+[0m19:49:30.465028 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'e456fa93-3fa8-4789-9c3a-805fb700559a', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000017EE62D42C0>]}
+[0m19:49:30.474419 [debug] [Thread-1 (]: Began running node test.geopulse.assert_no_nulls_in_gps
+[0m19:49:30.475209 [info ] [Thread-1 (]: 1 of 1 START test assert_no_nulls_in_gps ....................................... [RUN]
+[0m19:49:30.476576 [debug] [Thread-1 (]: Acquiring new snowflake connection 'test.geopulse.assert_no_nulls_in_gps'
+[0m19:49:30.477234 [debug] [Thread-1 (]: Began compiling node test.geopulse.assert_no_nulls_in_gps
+[0m19:49:30.486781 [debug] [Thread-1 (]: Writing injected SQL for node "test.geopulse.assert_no_nulls_in_gps"
+[0m19:49:30.489195 [debug] [Thread-1 (]: Began executing node test.geopulse.assert_no_nulls_in_gps
+[0m19:49:30.534899 [debug] [Thread-1 (]: Writing runtime sql for node "test.geopulse.assert_no_nulls_in_gps"
+[0m19:49:30.536832 [debug] [Thread-1 (]: Using snowflake connection "test.geopulse.assert_no_nulls_in_gps"
+[0m19:49:30.537357 [debug] [Thread-1 (]: On test.geopulse.assert_no_nulls_in_gps: select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  SELECT *
+FROM GEOPULSE_DB.RAW.GPS_PINGS
+WHERE "device_id" IS NULL
+   OR "lat" IS NULL
+   OR "lon" IS NULL
+   OR "timestamp" IS NULL
+  
+  
+      
+    ) dbt_internal_test
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "node_id": "test.geopulse.assert_no_nulls_in_gps"} */
+[0m19:49:30.537768 [debug] [Thread-1 (]: Opening a new connection, currently in state init
+[0m19:49:31.793081 [debug] [Thread-1 (]: SQL status: SUCCESS 1 in 1.256 seconds
+[0m19:49:31.812686 [info ] [Thread-1 (]: 1 of 1 PASS assert_no_nulls_in_gps ............................................. [[32mPASS[0m in 1.34s]
+[0m19:49:31.813918 [debug] [Thread-1 (]: Finished running node test.geopulse.assert_no_nulls_in_gps
+[0m19:49:31.815775 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m19:49:31.816175 [debug] [MainThread]: Connection 'list_GEOPULSE_DB_DBT_STAGING' was left open.
+[0m19:49:31.816522 [debug] [MainThread]: On list_GEOPULSE_DB_DBT_STAGING: Close
+[0m19:49:32.199332 [debug] [MainThread]: Connection 'test.geopulse.assert_no_nulls_in_gps' was left open.
+[0m19:49:32.199969 [debug] [MainThread]: On test.geopulse.assert_no_nulls_in_gps: Close
+[0m19:49:32.590861 [info ] [MainThread]: 
+[0m19:49:32.591884 [info ] [MainThread]: Finished running 1 test in 0 hours 0 minutes and 3.80 seconds (3.80s).
+[0m19:49:32.593312 [debug] [MainThread]: Command end result
+[0m19:49:32.661311 [debug] [MainThread]: Wrote artifact WritableManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\manifest.json
+[0m19:49:32.665974 [debug] [MainThread]: Wrote artifact SemanticManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\semantic_manifest.json
+[0m19:49:32.670935 [debug] [MainThread]: Wrote artifact OsiDocument to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\osi_document.json
+[0m19:49:32.684843 [debug] [MainThread]: Wrote artifact RunExecutionResult to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\run_results.json
+[0m19:49:32.685527 [info ] [MainThread]: 
+[0m19:49:32.686467 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m19:49:32.687351 [info ] [MainThread]: 
+[0m19:49:32.688244 [info ] [MainThread]: Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=1
+[0m19:49:32.690619 [debug] [MainThread]: Command `dbt test` succeeded at 19:49:32.690372 after 9.81 seconds
+[0m19:49:32.691281 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000017EC3214DD0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000017EE6248730>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000017EE624ADB0>]}
+[0m19:49:32.691970 [debug] [MainThread]: Flushing usage events
+[0m19:49:34.349270 [debug] [MainThread]: An error was encountered while trying to flush usage events
