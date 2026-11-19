@@ -1,0 +1,11 @@
+﻿version: 2
+
+sources:
+  - name: geopulse_raw
+    database: GEOPULSE_DB
+    schema: RAW
+    tables:
+      - name: RAW_GPS_PINGS
+        description: Raw hyperlocal GPS mobility ping events.
+      - name: RAW_STORES
+        description: Retail store locations and metadata.
