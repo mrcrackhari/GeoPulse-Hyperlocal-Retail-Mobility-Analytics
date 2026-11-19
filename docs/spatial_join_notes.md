@@ -208,3 +208,28 @@ Runtime, driver memory, rows in / out.
 ## 6. Test results — TODO (Day 9)
 
 Spark UI screenshot: `docs/screenshots/` (placeholder).
+
+---
+
+## Day 3 - Input validation and lon/lat-order smoke join
+
+**Files:** `src/spatial/validate_inputs.py`, `tests/test_spatial_join.py`
+
+**Run**
+```
+python -m src.spatial.validate_inputs --stores data\seed\stores.csv
+python -m src.spatial.validate_inputs --stores data\seed\stores.csv --pings <pings file> --smoke-join
+pytest tests\test_spatial_join.py -q
+```
+Exit code 0 = all PASS, 1 = at least one FAIL.
+
+**What is validated**
+- Stores (18 checks): columns, blanks, unique `S####` ids, centres numeric / in box / not swapped, radius 500, zone fields, WKT parses, ring closed, WKT is (lon lat), vertices within box + 0.006 deg, area > 0, CCW, no self-crossing, centre inside own polygon.
+- Pings (9 checks, chunked): columns, nulls, numeric, inside city box, not swapped, timestamps parse / naive / in window, `D######` ids.
+- Smoke join: 100,000 pings x 5,000 polygons, broadcast `ST_Intersects`, compared with a numpy brute force; six planted points with known answers (A centre -> S0001, B centre -> S0002, lens -> both, 420 m west of A -> S0001, 420 m east of B -> S0002, 600 m north of A -> none).
+
+**Rule:** `ST_Point(lon, lat)` - longitude first. `h3.geo_to_h3(lat, lon, res)` - latitude first. Store A's centre is inside S0001 only with the first order.
+
+**Deviation:** edge-store circles overhang the city box by up to ~500 m, so the polygon-in-box check allows a 0.006 deg margin (centres must still be strictly inside the box).
+
+**Results (fill in after running on your machine):** validation ___/18 PASS; smoke join ___ s; tests ___ passed.
