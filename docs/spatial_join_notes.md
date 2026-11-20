@@ -189,9 +189,38 @@ Member 3's frontend reads the polygons through the exports.
 
 ---
 
-## 3. Spatial join design — TODO (Day 4 / Day 5)
+## 3. Spatial join design (Day 4 / Day 5)
 
-Output contract confirmed with Members 1 & 3, partition / broadcast plan, Sedona-vs-shapely fixture result.
+### 3.1 Output contract confirmed (Day 4)
+
+`src/spatial/spatial_join.py` writes `data/processed/ping_store_matches/` (Parquet) in exactly the PING_STORE_MATCHES layout (plan 9.3):
+
+| column | dtype |
+|---|---|
+| `device_id` | string |
+| `store_id` | string |
+| `ts` | timestamp |
+| `lat` | double |
+| `lon` | double |
+
+- One row per (ping, store) intersection. A ping in the overlap lens of S0001 and S0002 appears twice (once per store). Pings outside every catchment are not written.
+- `ts` is the naive city-local time from the pings (no timezone conversion; Spark session time zone is UTC only so nothing is shifted).
+- The script re-reads its own output and checks the column names, order and dtypes, no nulls, and lat/lon inside the city box. It exits 1 if anything is off.
+- For Member 1 (`load_raw_data.py`): load the folder as-is; `RAW.PING_STORE_MATCHES` takes the same five columns.
+- For Member 3 (`int_store_visits.sql`): the five columns above are all you get; there is no `geom` column. Day-6 sample matches come from running with `--out data/processed/sample_matches`.
+
+Sample-run result (fill in after running):
+- Pings file: ______  rows in: ______  rows out: ______  runtime: ______ s  driver memory: ____  contract check: PASS / FAIL
+- Told Members 1 & 3 on: ______
+
+### 3.2 Design
+
+- `ST_Point(lon, lat)` (longitude first) for pings; `ST_GeomFromWKT(catchment_wkt)` for the 5,000 polygons.
+- `/*+ BROADCAST(s) */` on the stores: 5,000 small polygons are copied to every task, so the 10 M pings are never shuffled. The plan is inspected with `EXPLAIN` and the audit records `broadcast_in_plan`.
+- Pings are never `collect()`ed to the driver. Output is written with `coalesce(16)` (fewer, larger files).
+- `--by-day` joins one Parquet file at a time and appends (first write overwrites, so re-runs are idempotent).
+
+Sedona-vs-shapely fixture result — TODO (Day 5).
 
 ## 4. Full-scale run (10 M × 5,000) — TODO (Day 6)
 
