@@ -1,0 +1,56 @@
+{
+    "path_count": 171,
+    "parsed_path_count": 171,
+    "static_analysis_path_count": 4,
+    "static_analysis_parsed_path_count": 4,
+    "is_partial_parse_enabled": true,
+    "is_static_analysis_enabled": true,
+    "read_files_elapsed": 0.07263910002075136,
+    "load_macros_elapsed": 0.9480237000389025,
+    "parse_project_elapsed": 0.6337709999643266,
+    "patch_sources_elapsed": 0.027572999999392778,
+    "process_manifest_elapsed": 0.03941179998219013,
+    "load_all_elapsed": 1.8122831000364386,
+    "projects": [
+        {
+            "project_name": "geopulse",
+            "elapsed": 0.6301328000263311,
+            "parsers": [
+                {
+                    "parser": "model",
+                    "elapsed": 0.336049199977424,
+                    "parsed_path_count": 4
+                },
+                {
+                    "parser": "test",
+                    "elapsed": 0.1605009000049904,
+                    "parsed_path_count": 1
+                },
+                {
+                    "parser": "test",
+                    "elapsed": 0.1320869000046514,
+                    "parsed_path_count": 1
+                }
+            ],
+            "parsed_path_count": 6
+        },
+        {
+            "project_name": "dbt_snowflake",
+            "elapsed": 0.0019392999820411205,
+            "parsers": [],
+            "parsed_path_count": 0
+        },
+        {
+            "project_name": "dbt",
+            "elapsed": 0.0015699999639764428,
+            "parsers": [
+                {
+                    "parser": "doc",
+                    "elapsed": 0.00023900001542642713,
+                    "parsed_path_count": 1
+                }
+            ],
+            "parsed_path_count": 1
+        }
+    ]
+}

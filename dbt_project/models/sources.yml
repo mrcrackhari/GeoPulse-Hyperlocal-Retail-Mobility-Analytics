@@ -11,3 +11,10 @@ sources:
           - name: lat
           - name: lon
           - name: timestamp
+      - name: PING_STORE_MATCHES
+        columns:
+          - name: device_id
+          - name: store_id
+          - name: timestamp
+          - name: lat
+          - name: lon
