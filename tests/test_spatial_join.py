@@ -229,3 +229,123 @@ def test_sedona_lon_lat_order(sedona_session, stores):
 def test_sedona_100k_smoke_join(sedona_session, stores):
     results = vi.run_smoke_join(sedona_session, stores, n_rows=vi.SMOKE_ROWS)
     assert all(r.passed for r in results), [str(r) for r in results if not r.passed]
+
+
+# =====================================================================================
+# Day 5 - real fixture: 3 stores, ~200 pings, Sedona must equal a brute-force answer
+# =====================================================================================
+FIXTURE_STORES = ("S0001", "S0002", "S0003")
+
+
+def _offset(lat: float, lon: float, dx: float, dy: float):
+    """(lat, lon) moved dx metres east and dy metres north (metric maths in UTM 43N)."""
+    e, n = gs.lonlat_to_utm43n(lon, lat)
+    lo, la = gs.utm43n_to_lonlat(e + dx, n + dy)
+    return round(float(la), 6), round(float(lo), 6)
+
+
+def build_fixture_points(stores: pd.DataFrame):
+    """~200 deterministic (lat, lon) points around 3 real stores + the indices of exact-boundary points.
+
+    Groups: scattered around A, around B, in the A/B lens, around S0003, far away, the six planted points,
+    and 9 polygon VERTICES (exactly on a boundary: ST_Intersects and shapely both count them as inside).
+    """
+    rng = np.random.default_rng(42)
+    by_id = stores.set_index("store_id")
+    pts, boundary = [], set()
+
+    def ring_points(sid, n, max_r):
+        lat, lon = float(by_id.loc[sid, "center_lat"]), float(by_id.loc[sid, "center_lon"])
+        r, th = max_r * np.sqrt(rng.random(n)), 2 * np.pi * rng.random(n)
+        return [_offset(lat, lon, r[i] * np.cos(th[i]), r[i] * np.sin(th[i])) for i in range(n)]
+
+    pts += ring_points("S0001", 40, 800)
+    pts += ring_points("S0002", 40, 800)
+    a, b = by_id.loc["S0001"], by_id.loc["S0002"]
+    mid_lat, mid_lon = (float(a.center_lat) + float(b.center_lat)) / 2, (float(a.center_lon) + float(b.center_lon)) / 2
+    pts += [_offset(mid_lat, mid_lon, rng.uniform(-120, 120), rng.uniform(-120, 120)) for _ in range(20)]
+    pts += ring_points("S0003", 55, 800)
+    pts += [(round(vi.MIN_LAT + (vi.MAX_LAT - vi.MIN_LAT) * rng.random(), 6),
+             round(vi.MIN_LON + (vi.MAX_LON - vi.MIN_LON) * rng.random(), 6)) for _ in range(30)]
+    pts += list(vi.planted_points().values())
+    for sid in FIXTURE_STORES:                                   # 3 vertices of each polygon, untouched
+        ring = vi.parse_wkt_polygon(by_id.loc[sid, "catchment_wkt"])
+        for k in (0, 8, 16):
+            boundary.add(len(pts))
+            pts.append((float(ring[k, 1]), float(ring[k, 0])))   # WKT is (lon lat)
+    return pts, boundary
+
+
+def brute_force_numpy(points, wkts, skip=frozenset()):
+    """Pure-numpy even-odd answer {(index, store_id)}; ``skip`` = boundary points (ambiguous for ray casting)."""
+    rings = {sid: vi.parse_wkt_polygon(w) for sid, w in wkts.items()}
+    return {(i, sid) for i, (lat, lon) in enumerate(points) if i not in skip
+            for sid, ring in rings.items() if vi.point_in_ring(lon, lat, ring)}
+
+
+def brute_force_shapely(points, wkts):
+    """The reference answer: shapely ``intersects`` (boundary counts as inside, like ST_Intersects)."""
+    shapely_wkt = pytest.importorskip("shapely.wkt")
+    from shapely.geometry import Point
+    polys = {sid: shapely_wkt.loads(w) for sid, w in wkts.items()}
+    return {(i, sid) for i, (lat, lon) in enumerate(points)
+            for sid, poly in polys.items() if poly.intersects(Point(lon, lat))}
+
+
+@pytest.fixture(scope="module")
+def fixture3(stores, tmp_path_factory):
+    from src.spatial import make_demo_pings as demo
+    pytest.importorskip("pyarrow")
+    sub = stores[stores.store_id.isin(FIXTURE_STORES)].reset_index(drop=True)
+    pts, boundary = build_fixture_points(sub)
+    root = tmp_path_factory.mktemp("fixture3")
+    sub.to_csv(root / "stores3.csv", index=False)
+    n = len(pts)
+    df = pd.DataFrame({"device_id": [f"D{i:06d}" for i in range(n)],
+                       "lat": [p[0] for p in pts], "lon": [p[1] for p in pts],
+                       "ts": pd.Timestamp("2026-01-05 08:00") + pd.to_timedelta(np.arange(n), unit="min")})
+    df["ts"] = df["ts"].astype("datetime64[ms]")
+    demo.write_pings(df, root / "pings3.parquet", split_days=False)
+    return {"points": pts, "boundary": boundary, "df": df, "root": root,
+            "wkts": dict(zip(sub["store_id"], sub["catchment_wkt"]))}
+
+
+def test_fixture_size_and_validity(fixture3):
+    assert 190 <= len(fixture3["points"]) <= 215
+    stats = vi.PingStats()
+    stats.update(fixture3["df"])
+    assert [r.name for r in vi.ping_checks(stats) if not r.passed] == []
+
+
+def test_fixture_covers_every_membership_case(fixture3):
+    """The fixture is only useful if it has A-only, B-only, lens, S0003-only and outside points."""
+    got = brute_force_numpy(fixture3["points"], fixture3["wkts"], skip=fixture3["boundary"])
+    per_point = {}
+    for i, sid in got:
+        per_point.setdefault(i, set()).add(sid)
+    kinds = {frozenset(v) for v in per_point.values()}
+    assert {frozenset({"S0001"}), frozenset({"S0002"}), frozenset({"S0001", "S0002"}), frozenset({"S0003"})} <= kinds
+    inside = set(per_point)
+    outside = [i for i in range(len(fixture3["points"])) if i not in inside and i not in fixture3["boundary"]]
+    assert len(outside) >= 20
+
+
+def test_shapely_brute_force_agrees_with_numpy(fixture3):
+    shp = brute_force_shapely(fixture3["points"], fixture3["wkts"])
+    num = brute_force_numpy(fixture3["points"], fixture3["wkts"], skip=fixture3["boundary"])
+    assert {m for m in shp if m[0] not in fixture3["boundary"]} == num
+    for i in fixture3["boundary"]:                                # vertices are on the boundary -> inside
+        assert any(m[0] == i for m in shp)
+
+
+def test_sedona_equals_shapely_brute_force(sedona_session, fixture3):
+    """Day 5 acceptance: the Sedona broadcast join returns exactly the shapely answer (same rows, same count)."""
+    from src.spatial import spatial_join as sj
+    expected = brute_force_shapely(fixture3["points"], fixture3["wkts"])
+    out = fixture3["root"] / "matches3"
+    audit = sj.run_join(sedona_session, fixture3["root"] / "pings3.parquet", fixture3["root"] / "stores3.csv", out)
+    rows = sedona_session.read.parquet(sj.spark_path(out)).select("device_id", "store_id").collect()
+    got = {(int(r["device_id"][1:]), r["store_id"]) for r in rows}
+    assert len(rows) == len(got) == audit["rows_out"], "duplicate rows in output"
+    assert got == expected, f"only Sedona: {sorted(got - expected)[:5]}; only shapely: {sorted(expected - got)[:5]}"
+    assert all(r.passed for r in sj.verify_output(sedona_session, out))

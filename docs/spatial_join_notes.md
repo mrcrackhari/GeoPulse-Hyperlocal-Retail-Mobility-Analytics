@@ -220,7 +220,27 @@ Sample-run result (fill in after running):
 - Pings are never `collect()`ed to the driver. Output is written with `coalesce(16)` (fewer, larger files).
 - `--by-day` joins one Parquet file at a time and appends (first write overwrites, so re-runs are idempotent).
 
-Sedona-vs-shapely fixture result — TODO (Day 5).
+### 3.3 Sedona vs shapely fixture (Day 5)
+
+`tests/test_spatial_join.py` builds a fixture of **3 stores** (S0001, S0002 and the ordinary store S0003) and **200 deterministic pings**: scattered around each store (some inside, some just outside), a group in the A/B overlap lens, 30 far-away pings, the 6 planted points, and 9 polygon vertices that lie exactly on a boundary. Expected membership is computed with shapely (`polygon.intersects(Point(lon, lat))`, boundary counts as inside, same as `ST_Intersects`) and compared with the rows written by `spatial_join.run_join`.
+
+Case coverage (checked by a test, pure numpy, boundary points excluded): A-only 23, B-only 15, A+B lens 28, S0003-only 19, outside every store 106.
+
+The process with PID 25328 (child process of PID 4396) has been terminated.
+SUCCESS: The process with PID 4396 (child process of PID 29156) has been terminated.
+SUCCESS: The process with PID 29156 (child process of PID 22892) has been terminated.
+
+### 3.4 Partition and broadcast plan
+
+| Item | Choice | Why |
+|---|---|---|
+| Join type | `ST_Intersects` with `/*+ BROADCAST(s) */` on the stores | 5,000 polygons x 33 points is a few MB: copied once to every task, so the 10 M pings are never shuffled |
+| Point order | `ST_Point(lon, lat)` | longitude first; guarded by the Day 3 tests |
+| Input partitions | one Spark partition per Parquet block / daily file (30 files) | even work per task; no repartition needed before the join |
+| Shuffle partitions | 64 (`spark.sql.shuffle.partitions`) | a broadcast join has no shuffle; 64 only matters for the audit's aggregations. Raise it only if a later step shuffles |
+| Output files | `coalesce(16)` | the matches are small relative to the pings; 16 larger files load faster than hundreds of tiny ones |
+| Memory | `--driver-memory 4g`, pings never collected to the driver | the driver only holds the 5,000 polygons and the plan |
+| Fallback ladder | (1) check `BROADCAST` in the plan (`broadcast_in_plan` in the audit); (2) more input partitions / shuffle partitions; (3) `--by-day` (join one file at a time and append); (4) select only needed columns (already done); (5) raise driver memory; (6) Databricks Community Edition | plan Section 12 |
 
 ## 4. Full-scale run (10 M × 5,000) — TODO (Day 6)
 
