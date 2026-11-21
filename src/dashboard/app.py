@@ -9,7 +9,11 @@ DASHBOARD_DIR = Path(__file__).resolve().parent
 if str(DASHBOARD_DIR) not in sys.path:
     sys.path.insert(0, str(DASHBOARD_DIR))
 
-from data_loader import get_placeholder_kpis, load_mobility_data
+from data_loader import (
+    get_placeholder_kpis,
+    get_store_footfall_data,
+    load_mobility_data,
+)
 
 
 st.set_page_config(
@@ -55,17 +59,40 @@ st.markdown(
 
 def main() -> None:
     st.title("GeoPulse Hyperlocal Retail Mobility Analytics")
-    st.caption("Day 4 Visualization Lead Skeleton - Placeholder Metrics, Charts & Staging Hook")
+    st.caption("Day 5 Visualization Lead - Interactive Filters, Dwell Analytics & Cached Data Layer")
 
-    _, all_stores_df, _ = load_mobility_data("All Stores")
-    store_options = ["All Stores"] + all_stores_df["store_name"].tolist()
+    catalog_df = get_store_footfall_data()
+    zone_options = ["All Zones"] + sorted(catalog_df["zone"].unique().tolist())
 
     with st.sidebar:
         st.header("Filters")
-        selected_store = st.selectbox("Store Location", options=store_options, index=0)
-        window_mode = st.radio("Time Window", options=["Full Day (24h)", "Peak Hours (17:00-21:00)"], index=0)
+        selected_zone = st.selectbox("Retail Zone", options=zone_options, index=0)
 
-    hourly_df, stores_df, source_status = load_mobility_data(store_filter=selected_store)
+        filtered_catalog = (
+            catalog_df if selected_zone == "All Zones"
+            else catalog_df[catalog_df["zone"] == selected_zone]
+        )
+        store_options = ["All Stores"] + filtered_catalog["store_name"].tolist()
+        selected_store = st.selectbox("Store Location", options=store_options, index=0)
+
+        window_mode = st.radio(
+            "Time Window",
+            options=["Full Day (24h)", "Peak Hours (17:00-21:00)"],
+            index=0,
+        )
+        min_dwell = st.slider(
+            "Minimum Avg Dwell (mins)",
+            min_value=0.0,
+            max_value=25.0,
+            value=0.0,
+            step=2.5,
+        )
+
+    hourly_df, stores_df, source_status = load_mobility_data(
+        store_filter=selected_store,
+        zone_filter=selected_zone,
+        min_dwell_mins=min_dwell,
+    )
     if window_mode == "Peak Hours (17:00-21:00)":
         hourly_df = hourly_df[hourly_df["hour"].between(17, 21)].reset_index(drop=True)
 
@@ -78,24 +105,47 @@ def main() -> None:
     col3.metric("Peak Mobility Window", str(kpis["peak_mobility_window"]), str(kpis["peak_mobility_delta"]))
     col4.metric("Staging Models", str(kpis["staging_models_ready"]), str(kpis["staging_models_delta"]))
 
-    tab_overview, tab_stores, tab_pipeline = st.tabs(["Overview", "Store Footfall", "Staging & Pipeline"])
+    tab_overview, tab_stores, tab_pipeline = st.tabs([
+        "Overview",
+        "Store Footfall & Dwell",
+        "Staging & Pipeline",
+    ])
 
     with tab_overview:
-        st.subheader("Hourly GPS Ping Volume (Placeholder)")
-        chart_df = hourly_df.set_index("hour_label")[["gps_pings"]]
-        st.line_chart(chart_df, height=320)
+        st.subheader("Hourly GPS Ping Volume")
+        if hourly_df.empty:
+            st.info("No hourly mobility rows match the active filter selection.")
+        else:
+            st.line_chart(hourly_df.set_index("hour_label")[["gps_pings"]], height=320)
 
     with tab_stores:
-        st.subheader("Estimated Store Footfall (Placeholder)")
-        st.bar_chart(stores_df.set_index("store_name")[["estimated_footfall"]], height=300)
-        st.dataframe(stores_df, width="stretch", hide_index=True)
+        st.subheader("Estimated Store Footfall")
+        if stores_df.empty:
+            st.info("No stores match the current zone or minimum dwell filter.")
+        else:
+            st.bar_chart(stores_df.set_index("store_name")[["estimated_footfall"]], height=300)
+            st.subheader("Average Dwell Time by Store (mins)")
+            st.bar_chart(stores_df.set_index("store_name")[["avg_dwell_mins"]], height=240)
+            st.dataframe(stores_df, width="stretch", hide_index=True)
 
     with tab_pipeline:
         st.subheader("Snowflake & dbt Staging Readiness")
         pipeline_df = pd.DataFrame({
-            "Component": ["GEOPULSE_DB.RAW.stg_gps_pings", "GEOPULSE_DB.RAW.stg_stores", "Dashboard Data Loader"],
-            "Status": ["View Built (Day 3)", "View Built (Day 3)", "Placeholder Active (Day 4)"],
-            "Next Step": ["Connect live row metrics", "Connect store attributes", "Swap in mart/staging queries"],
+            "Component": [
+                "GEOPULSE_DB.RAW.stg_gps_pings",
+                "GEOPULSE_DB.RAW.stg_stores",
+                "Dashboard Data Loader",
+            ],
+            "Status": [
+                "View Built (Day 3)",
+                "View Built (Day 3)",
+                "Cached Placeholder Active (Day 5)",
+            ],
+            "Next Step": [
+                "Connect live row metrics",
+                "Connect store attributes",
+                "Swap in mart/staging queries",
+            ],
         })
         st.dataframe(pipeline_df, width="stretch", hide_index=True)
 

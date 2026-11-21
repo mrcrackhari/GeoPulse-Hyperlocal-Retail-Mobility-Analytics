@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+import streamlit as st
 
 
 def get_placeholder_kpis() -> dict[str, object]:
@@ -17,9 +18,9 @@ def get_placeholder_kpis() -> dict[str, object]:
     }
 
 
-def get_placeholder_hourly_mobility(store_filter: str = "All Stores") -> pd.DataFrame:
+@st.cache_data(show_spinner=False)
+def _build_hourly_curve(seed: int) -> pd.DataFrame:
     hours = list(range(24))
-    seed = 42 if store_filter == "All Stores" else abs(hash(store_filter)) % 10000
     rng = np.random.default_rng(seed)
     base_curve = np.array([
         180, 120, 90, 75, 85, 140, 290, 520, 780, 910, 960, 1040,
@@ -34,7 +35,8 @@ def get_placeholder_hourly_mobility(store_filter: str = "All Stores") -> pd.Data
     })
 
 
-def get_placeholder_store_footfall() -> pd.DataFrame:
+@st.cache_data(show_spinner=False)
+def get_store_footfall_data() -> pd.DataFrame:
     return pd.DataFrame({
         "store_name": [
             "Hazratganj Flagship",
@@ -50,11 +52,52 @@ def get_placeholder_store_footfall() -> pd.DataFrame:
     })
 
 
-def load_mobility_data(store_filter: str = "All Stores") -> tuple[pd.DataFrame, pd.DataFrame, str]:
-    hourly_df = get_placeholder_hourly_mobility(store_filter=store_filter)
-    stores_df = get_placeholder_store_footfall()
+def get_placeholder_hourly_mobility(
+    store_filter: str = "All Stores",
+    zone_filter: str = "All Zones",
+) -> pd.DataFrame:
+    key_str = f"{store_filter}|{zone_filter}"
+    seed = 42 if key_str == "All Stores|All Zones" else (abs(hash(key_str)) % 10000)
+    df = _build_hourly_curve(seed).copy()
+    if zone_filter != "All Zones":
+        zone_multipliers = {
+            "Central": 1.15,
+            "East": 1.05,
+            "South": 0.92,
+            "North-East": 0.88,
+            "South-Central": 0.85,
+            "North": 0.80,
+        }
+        mult = zone_multipliers.get(zone_filter, 1.0)
+        df["gps_pings"] = np.round(df["gps_pings"] * mult).astype(int)
+    return df
+
+
+def load_mobility_data(
+    store_filter: str = "All Stores",
+    zone_filter: str = "All Zones",
+    min_dwell_mins: float = 0.0,
+) -> tuple[pd.DataFrame, pd.DataFrame, str]:
+    hourly_df = get_placeholder_hourly_mobility(
+        store_filter=store_filter,
+        zone_filter=zone_filter,
+    )
+    stores_df = get_store_footfall_data().copy()
+
+    if zone_filter != "All Zones":
+        stores_df = stores_df[stores_df["zone"] == zone_filter]
+
+    if min_dwell_mins > 0.0:
+        stores_df = stores_df[stores_df["avg_dwell_mins"] >= min_dwell_mins]
+
     if store_filter != "All Stores":
-        filtered_stores = stores_df[stores_df["store_name"] == store_filter]
-        if not filtered_stores.empty:
-            stores_df = filtered_stores.reset_index(drop=True)
-    return hourly_df, stores_df, "Placeholder dataset active (Snowflake GEOPULSE_DB staging hook ready)"
+        matched = stores_df[stores_df["store_name"] == store_filter]
+        if not matched.empty:
+            stores_df = matched
+
+    stores_df = stores_df.reset_index(drop=True)
+    status = (
+        f"Day 5 cached placeholder layer active | Zone: {zone_filter} | "
+        f"Store: {store_filter} | Min Dwell: {min_dwell_mins:.1f}m"
+    )
+    return hourly_df, stores_df, status
