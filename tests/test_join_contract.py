@@ -179,3 +179,25 @@ def test_by_day_equals_single_run_and_is_idempotent(sedona_session, tiny_inputs)
     again = sj.run_join(sedona_session, tiny_inputs["dir"], STORES_CSV, out_day, by_day=True)
     assert again["rows_out"] == b["rows_out"]                     # overwrite, never doubled
     assert _a_b_matches(sedona_session, out_day) == tiny_inputs["expected"]
+
+
+# ------------------------------------------------------------------------------- Day 6 ---
+def test_demo_days_chunked_generator():
+    days = list(demo.iter_demo_days(3_000, seed=1))
+    assert len(days) == 30 and days[0][0] == "2026-01-01" and days[-1][0] == "2026-01-30"
+    assert sum(len(d) for _, d in days) == 3_000 + len(vi.PLANTED_EXPECTED)
+    stats = vi.PingStats()
+    for _, d in days:
+        stats.update(d)
+    assert [r.name for r in vi.ping_checks(stats) if not r.passed] == []
+    assert all(str(d["ts"].min())[:10] == day == str(d["ts"].max())[:10] for day, d in days)
+
+
+def test_notes_row_and_peak_memory():
+    audit = {"shuffle_partitions": "64", "by_day": True, "broadcast_in_plan": True, "driver_memory": "4g",
+             "runtime_seconds": 300.0, "peak_process_tree_rss_mb": 3100.0}
+    row = sj.notes_row(audit, run_no=2)
+    assert row.startswith("| 2 | 64 | yes | yes | 4g | 300 s (5.0 min) | 3,100 MB | no |")
+    with sj.PeakMemory(interval=0.05) as m:
+        pass                                              # must start/stop cleanly with or without psutil
+    assert m.peak_mb is None or m.peak_mb > 0

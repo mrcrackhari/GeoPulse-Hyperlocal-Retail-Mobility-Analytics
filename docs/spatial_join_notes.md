@@ -226,9 +226,7 @@ Sample-run result (fill in after running):
 
 Case coverage (checked by a test, pure numpy, boundary points excluded): A-only 23, B-only 15, A+B lens 28, S0003-only 19, outside every store 106.
 
-The process with PID 25328 (child process of PID 4396) has been terminated.
-SUCCESS: The process with PID 4396 (child process of PID 29156) has been terminated.
-SUCCESS: The process with PID 29156 (child process of PID 22892) has been terminated.
+Result (fill in after running `pytest tests\test_spatial_join.py -q`): Sedona rows = ____ , shapely rows = ____ , identical: yes / no; tests passed: ____.
 
 ### 3.4 Partition and broadcast plan
 
@@ -242,9 +240,33 @@ SUCCESS: The process with PID 29156 (child process of PID 22892) has been termin
 | Memory | `--driver-memory 4g`, pings never collected to the driver | the driver only holds the 5,000 polygons and the plan |
 | Fallback ladder | (1) check `BROADCAST` in the plan (`broadcast_in_plan` in the audit); (2) more input partitions / shuffle partitions; (3) `--by-day` (join one file at a time and append); (4) select only needed columns (already done); (5) raise driver memory; (6) Databricks Community Edition | plan Section 12 |
 
-## 4. Full-scale run (10 M × 5,000) — TODO (Day 6)
+## 4. Full-scale run (10 M × 5,000) — Day 6
 
-Runtime, driver memory, rows in / out.
+**Command** (driver memory 4g, one daily file at a time is the fallback):
+```
+python -m src.spatial.spatial_join --pings data\raw\gps_pings.parquet --driver-memory 4g --audit
+python -m src.spatial.spatial_join --pings data\raw\gps_pings.parquet --driver-memory 4g --by-day --audit   # if OOM
+```
+Input: Member 1's full `data/raw/gps_pings.parquet/` (30 daily files, 9.8–10.2 M rows) — or, if it is not ready, the stand-in `python -m src.spatial.make_demo_pings --rows 10000000 --out data\raw\demo_days_10m --split-days` (label the run "stand-in data" below).
+
+| Field | Value |
+|---|---|
+| Machine (CPU cores / RAM / OS) | |
+| Input (real or stand-in) | |
+| Rows in | |
+| Stores | 5,000 |
+| Rows out (ping, store matches) | |
+| Matches per 100 pings | |
+| Runtime | |
+| Pings per second | |
+| Driver memory | 4g |
+| Broadcast in plan | |
+| Peak memory (process tree) | |
+| Finished without OOM | yes / no |
+| Contract 9.3 check | PASS / FAIL |
+
+Target: < 8 minutes on an 8-core laptop (record the actual, even if slower).
+If OOM: apply the ladder in section 3.4 (`--by-day` first) and record each attempt as a row in section 5.
 
 ## 5. Memory audit — TODO (Day 7)
 

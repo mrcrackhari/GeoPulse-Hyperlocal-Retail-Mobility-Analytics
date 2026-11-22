@@ -126,6 +126,31 @@ def process_tree_rss_mb() -> Optional[float]:
     return round(total / 1024 / 1024, 1)
 
 
+class PeakMemory:
+    """Samples process-tree memory (Python + Spark JVM) in a background thread; ``peak_mb`` is None without psutil."""
+
+    def __init__(self, interval: float = 0.5) -> None:
+        import threading
+        self.interval, self.peak_mb = interval, None
+        self._stop = threading.Event()
+        self._thread = threading.Thread(target=self._run, daemon=True)
+
+    def _run(self) -> None:
+        while not self._stop.is_set():
+            mb = process_tree_rss_mb()
+            if mb is not None and (self.peak_mb is None or mb > self.peak_mb):
+                self.peak_mb = mb
+            self._stop.wait(self.interval)
+
+    def __enter__(self):
+        self._thread.start()
+        return self
+
+    def __exit__(self, *exc) -> None:
+        self._stop.set()
+        self._thread.join(timeout=2)
+
+
 # =========================================================================================
 # Spark steps
 # =========================================================================================
@@ -195,6 +220,13 @@ def run_join(sedona, pings, stores, out, by_day: bool = False, coalesce: int = D
     gives the same result and never doubles the rows.
     """
     files = list_ping_files(pings)
+    with PeakMemory() as mem:
+        audit = _run_join(sedona, files, pings, stores, out, by_day, coalesce)
+    audit["peak_process_tree_rss_mb"] = mem.peak_mb
+    return audit
+
+
+def _run_join(sedona, files, pings, stores, out, by_day, coalesce) -> Dict[str, Any]:
     t0 = time.time()
     register_stores(sedona, stores)
 
@@ -253,6 +285,15 @@ def format_audit(audit: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def notes_row(audit: Dict[str, Any], run_no: int = 1) -> str:
+    """One markdown row for the section 5 table of docs/spatial_join_notes.md (OOM? = no, since the run finished)."""
+    peak = audit.get("peak_process_tree_rss_mb")
+    mins = audit["runtime_seconds"] / 60
+    return (f"| {run_no} | {audit['shuffle_partitions']} | {'yes' if audit['by_day'] else 'no'} | "
+            f"{'yes' if audit['broadcast_in_plan'] else 'NO'} | {audit['driver_memory']} | "
+            f"{audit['runtime_seconds']:.0f} s ({mins:.1f} min) | {f'{peak:,.0f} MB' if peak else 'n/a (pip install psutil)'} | no |")
+
+
 def write_audit(audit: Dict[str, Any], path) -> Path:
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
@@ -301,6 +342,7 @@ def main(argv: Optional[list] = None) -> int:
         ok = all(r.passed for r in results)
         if args.audit:
             print(format_audit(audit))
+            print("\nPaste into docs/spatial_join_notes.md (section 5 table):\n" + notes_row(audit))
             LOG.info("audit saved to %s", write_audit(audit, args.audit_out))
         print("SPATIAL JOIN: PASS" if ok else "SPATIAL JOIN: FAIL")
         return 0 if ok else 1
