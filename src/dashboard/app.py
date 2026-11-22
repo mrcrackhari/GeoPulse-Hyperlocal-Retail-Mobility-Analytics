@@ -10,7 +10,8 @@ if str(DASHBOARD_DIR) not in sys.path:
     sys.path.insert(0, str(DASHBOARD_DIR))
 
 from data_loader import (
-    get_placeholder_kpis,
+    get_mobility_summary,
+    get_placeholder_hourly_mobility,
     get_store_footfall_data,
     load_mobility_data,
 )
@@ -59,13 +60,14 @@ st.markdown(
 
 def main() -> None:
     st.title("GeoPulse Hyperlocal Retail Mobility Analytics")
-    st.caption("Day 5 Visualization Lead - Interactive Filters, Dwell Analytics & Cached Data Layer")
-
-    catalog_df = get_store_footfall_data()
-    zone_options = ["All Zones"] + sorted(catalog_df["zone"].unique().tolist())
+    st.caption("Day 5 Visualization Lead - Day-Type Profiles, Dynamic KPIs & Dwell Segments")
 
     with st.sidebar:
         st.header("Filters")
+        day_type = st.radio("Day Profile", options=["Weekday", "Weekend"], index=0)
+
+        catalog_df = get_store_footfall_data(day_type=day_type)
+        zone_options = ["All Zones"] + sorted(catalog_df["zone"].unique().tolist())
         selected_zone = st.selectbox("Retail Zone", options=zone_options, index=0)
 
         filtered_catalog = (
@@ -92,40 +94,70 @@ def main() -> None:
         store_filter=selected_store,
         zone_filter=selected_zone,
         min_dwell_mins=min_dwell,
+        day_type=day_type,
     )
     if window_mode == "Peak Hours (17:00-21:00)":
         hourly_df = hourly_df[hourly_df["hour"].between(17, 21)].reset_index(drop=True)
 
+    summary = get_mobility_summary(hourly_df, stores_df)
+
     st.markdown(f'<div class="status-banner">{source_status}</div>', unsafe_allow_html=True)
 
-    kpis = get_placeholder_kpis()
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Total GPS Pings", str(kpis["total_gps_pings"]), str(kpis["total_gps_pings_delta"]))
-    col2.metric("Active Stores", str(kpis["active_stores"]), str(kpis["active_stores_delta"]))
-    col3.metric("Peak Mobility Window", str(kpis["peak_mobility_window"]), str(kpis["peak_mobility_delta"]))
-    col4.metric("Staging Models", str(kpis["staging_models_ready"]), str(kpis["staging_models_delta"]))
+    col1.metric("Window GPS Pings", summary["window_pings"], f"{day_type} | {window_mode}")
+    col2.metric("Filtered Footfall", summary["filtered_footfall"], summary["store_count"])
+    col3.metric("Peak Hour", summary["peak_hour"], summary["peak_pings"])
+    col4.metric("Avg Store Dwell", summary["avg_dwell"], "Active store selection")
 
     tab_overview, tab_stores, tab_pipeline = st.tabs([
-        "Overview",
-        "Store Footfall & Dwell",
+        "Overview & Day Comparison",
+        "Store Footfall & Dwell Segments",
         "Staging & Pipeline",
     ])
 
     with tab_overview:
-        st.subheader("Hourly GPS Ping Volume")
+        st.subheader(f"Hourly GPS Ping Volume ({day_type})")
         if hourly_df.empty:
             st.info("No hourly mobility rows match the active filter selection.")
         else:
-            st.line_chart(hourly_df.set_index("hour_label")[["gps_pings"]], height=320)
+            st.line_chart(hourly_df.set_index("hour_label")[["gps_pings"]], height=300)
+
+            st.subheader("Weekday vs. Weekend Hourly Comparison")
+            weekday_df = get_placeholder_hourly_mobility(
+                store_filter=selected_store,
+                zone_filter=selected_zone,
+                day_type="Weekday",
+            )
+            weekend_df = get_placeholder_hourly_mobility(
+                store_filter=selected_store,
+                zone_filter=selected_zone,
+                day_type="Weekend",
+            )
+            if window_mode == "Peak Hours (17:00-21:00)":
+                weekday_df = weekday_df[weekday_df["hour"].between(17, 21)]
+                weekend_df = weekend_df[weekend_df["hour"].between(17, 21)]
+
+            compare_df = pd.DataFrame({
+                "Weekday": weekday_df.set_index("hour_label")["gps_pings"],
+                "Weekend": weekend_df.set_index("hour_label")["gps_pings"],
+            })
+            st.line_chart(compare_df, height=280)
 
     with tab_stores:
         st.subheader("Estimated Store Footfall")
         if stores_df.empty:
             st.info("No stores match the current zone or minimum dwell filter.")
         else:
-            st.bar_chart(stores_df.set_index("store_name")[["estimated_footfall"]], height=300)
-            st.subheader("Average Dwell Time by Store (mins)")
-            st.bar_chart(stores_df.set_index("store_name")[["avg_dwell_mins"]], height=240)
+            st.bar_chart(stores_df.set_index("store_name")[["estimated_footfall"]], height=290)
+
+            st.subheader("Dwell Segment Distribution")
+            segment_counts = (
+                stores_df.groupby("dwell_segment", as_index=False)["store_id"]
+                .count()
+                .rename(columns={"store_id": "stores"})
+            )
+            st.bar_chart(segment_counts.set_index("dwell_segment")[["stores"]], height=220)
+
             st.dataframe(stores_df, width="stretch", hide_index=True)
 
     with tab_pipeline:
@@ -139,7 +171,7 @@ def main() -> None:
             "Status": [
                 "View Built (Day 3)",
                 "View Built (Day 3)",
-                "Cached Placeholder Active (Day 5)",
+                "Day 5 Profile & Dwell Engine Active",
             ],
             "Next Step": [
                 "Connect live row metrics",
