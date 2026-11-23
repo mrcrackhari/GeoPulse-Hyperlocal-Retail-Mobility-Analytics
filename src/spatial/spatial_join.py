@@ -65,6 +65,7 @@ SELECT /*+ BROADCAST(s) */ p.device_id, s.store_id, p.ts, p.lat, p.lon
 FROM pings p
 JOIN stores s ON ST_Intersects(s.geom, p.geom)
 """
+JOIN_SQL_NO_HINT = JOIN_SQL.replace("/*+ BROADCAST(s) */ ", "")   # Day 7 experiment: let Spark choose
 
 
 # =========================================================================================
@@ -81,6 +82,26 @@ def list_ping_files(path) -> List[Path]:
     if not files:
         raise FileNotFoundError(f"no *.parquet files inside {p}")
     return files
+
+
+PINGS_FALLBACKS = ("data/raw/gps_pings.parquet", "data/raw/gps_pings_sample.parquet",
+                   "data/raw/demo_pings_1m.parquet", "data/raw/demo_days_10m")
+
+
+def resolve_pings_path(path) -> Path:
+    """``path`` if it exists; otherwise the first existing file/folder in PINGS_FALLBACKS (with a warning).
+
+    Raises FileNotFoundError with the commands that create pings if nothing exists.
+    """
+    if Path(path).exists():
+        return Path(path)
+    for candidate in PINGS_FALLBACKS:
+        if Path(candidate).exists():
+            LOG.warning("pings path %s does not exist - using %s instead", path, candidate)
+            return Path(candidate)
+    raise FileNotFoundError(
+        f"pings path {path} does not exist and no fallback was found in data/raw. Get Member 1's pings, or create "
+        "stand-ins:  python -m src.spatial.make_demo_pings   (1M rows -> data/raw/demo_pings_1m.parquet)")
 
 
 def coalesce_for(total: int, n_files: int) -> int:
@@ -173,9 +194,9 @@ def register_pings(sedona, pings_df) -> None:
     pings_df.selectExpr("device_id", "lat", "lon", "ts", f"{POINT_EXPR} AS geom").createOrReplaceTempView("pings")
 
 
-def explain_join(sedona) -> str:
+def explain_join(sedona, sql: str = JOIN_SQL) -> str:
     """The physical plan of the join, as text (used to confirm a broadcast spatial join is chosen)."""
-    return "\n".join(r[0] for r in sedona.sql("EXPLAIN " + JOIN_SQL).collect())
+    return "\n".join(r[0] for r in sedona.sql("EXPLAIN " + sql).collect())
 
 
 def plan_uses_broadcast(plan_text: str) -> bool:
@@ -213,7 +234,8 @@ def verify_output(sedona, out) -> List[Any]:
     return results
 
 
-def run_join(sedona, pings, stores, out, by_day: bool = False, coalesce: int = DEFAULT_COALESCE) -> Dict[str, Any]:
+def run_join(sedona, pings, stores, out, by_day: bool = False, coalesce: int = DEFAULT_COALESCE,
+             broadcast_hint: bool = True) -> Dict[str, Any]:
     """Run the broadcast spatial join and write ``out``. Returns the audit dict.
 
     Output is overwritten (the first write uses overwrite, later --by-day writes append), so a re-run
@@ -221,12 +243,13 @@ def run_join(sedona, pings, stores, out, by_day: bool = False, coalesce: int = D
     """
     files = list_ping_files(pings)
     with PeakMemory() as mem:
-        audit = _run_join(sedona, files, pings, stores, out, by_day, coalesce)
+        audit = _run_join(sedona, files, pings, stores, out, by_day, coalesce, broadcast_hint)
     audit["peak_process_tree_rss_mb"] = mem.peak_mb
     return audit
 
 
-def _run_join(sedona, files, pings, stores, out, by_day, coalesce) -> Dict[str, Any]:
+def _run_join(sedona, files, pings, stores, out, by_day, coalesce, broadcast_hint=True) -> Dict[str, Any]:
+    sql = JOIN_SQL if broadcast_hint else JOIN_SQL_NO_HINT
     t0 = time.time()
     register_stores(sedona, stores)
 
@@ -241,11 +264,11 @@ def _run_join(sedona, files, pings, stores, out, by_day, coalesce) -> Dict[str, 
         rows_in += n_in
         register_pings(sedona, pings_df)
         if not plan:
-            plan = explain_join(sedona)
+            plan = explain_join(sedona, sql)
             if not plan_uses_broadcast(plan):
                 LOG.warning("physical plan has no broadcast join - check the Spark UI (SQL tab)")
         t_job = time.time()
-        (sedona.sql(JOIN_SQL).coalesce(per_job).write
+        (sedona.sql(sql).coalesce(per_job).write
                .mode("overwrite" if i == 1 else "append").parquet(spark_path(out)))
         LOG.info("[%d/%d] %s: %s pings joined in %.1fs", i, len(jobs), label, f"{n_in:,}", time.time() - t_job)
 
@@ -256,7 +279,7 @@ def _run_join(sedona, files, pings, stores, out, by_day, coalesce) -> Dict[str, 
     return {
         "finished_at": datetime.now().isoformat(timespec="seconds"),
         "pings_path": str(pings), "stores_path": str(stores), "out": str(out),
-        "ping_files": len(files), "by_day": bool(by_day),
+        "ping_files": len(files), "by_day": bool(by_day), "broadcast_hint": bool(broadcast_hint),
         "rows_in": rows_in, "stores": int(n_stores), "rows_out": int(rows_out),
         "matches_per_100_pings": round(100.0 * rows_out / rows_in, 3) if rows_in else None,
         "runtime_seconds": round(seconds, 1),
@@ -274,7 +297,7 @@ def _run_join(sedona, files, pings, stores, out, by_day, coalesce) -> Dict[str, 
 # Audit output
 # =========================================================================================
 def format_audit(audit: Dict[str, Any]) -> str:
-    keys = ["pings_path", "stores_path", "out", "ping_files", "by_day", "rows_in", "stores", "rows_out",
+    keys = ["pings_path", "stores_path", "out", "ping_files", "by_day", "broadcast_hint", "rows_in", "stores", "rows_out",
             "matches_per_100_pings", "runtime_seconds", "pings_per_second", "driver_memory",
             "shuffle_partitions", "output_files_target", "broadcast_in_plan", "process_tree_rss_mb",
             "spark_version", "finished_at"]
@@ -290,7 +313,7 @@ def notes_row(audit: Dict[str, Any], run_no: int = 1) -> str:
     peak = audit.get("peak_process_tree_rss_mb")
     mins = audit["runtime_seconds"] / 60
     return (f"| {run_no} | {audit['shuffle_partitions']} | {'yes' if audit['by_day'] else 'no'} | "
-            f"{'yes' if audit['broadcast_in_plan'] else 'NO'} | {audit['driver_memory']} | "
+            f"{'yes' if audit.get('broadcast_hint', audit['broadcast_in_plan']) else 'no'} | {audit['driver_memory']} | "
             f"{audit['runtime_seconds']:.0f} s ({mins:.1f} min) | {f'{peak:,.0f} MB' if peak else 'n/a (pip install psutil)'} | no |")
 
 
@@ -315,6 +338,8 @@ def build_parser() -> argparse.ArgumentParser:
     ap.add_argument("--driver-memory", default=None, help="Spark driver memory, e.g. 4g")
     ap.add_argument("--shuffle-partitions", type=int, default=None, help="spark.sql.shuffle.partitions (default 64)")
     ap.add_argument("--coalesce", type=int, default=DEFAULT_COALESCE, help="output file count (default 16)")
+    ap.add_argument("--no-broadcast-hint", action="store_true",
+                    help="experiment: drop the BROADCAST hint and the broadcast threshold (Day 7 memory audit)")
     ap.add_argument("--verbose", action="store_true", help="show the full Python traceback on failure")
     return ap
 
@@ -324,6 +349,8 @@ def main(argv: Optional[list] = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     sedona = None
     try:
+        if args.pings == DEFAULT_PINGS:
+            args.pings = str(resolve_pings_path(args.pings))
         list_ping_files(args.pings)                  # fail fast, before the slow Spark start
         if not Path(args.stores).exists():
             raise FileNotFoundError(f"{args.stores} not found - run `python -m src.spatial.generate_stores`")
@@ -332,9 +359,11 @@ def main(argv: Optional[list] = None) -> int:
         except ImportError:
             from sedona_config import get_sedona  # type: ignore
         sedona = get_sedona(app_name="geopulse-spatial-join", driver_memory=args.driver_memory,
-                            shuffle_partitions=args.shuffle_partitions)
+                            shuffle_partitions=args.shuffle_partitions,
+                            extra_conf={"spark.sql.autoBroadcastJoinThreshold": "-1"} if args.no_broadcast_hint else None)
         LOG.info("joining %s with %s -> %s (by_day=%s)", args.pings, args.stores, args.out, args.by_day)
-        audit = run_join(sedona, args.pings, args.stores, args.out, by_day=args.by_day, coalesce=args.coalesce)
+        audit = run_join(sedona, args.pings, args.stores, args.out, by_day=args.by_day, coalesce=args.coalesce,
+                         broadcast_hint=not args.no_broadcast_hint)
 
         results = verify_output(sedona, args.out)
         for r in results:
@@ -352,6 +381,13 @@ def main(argv: Optional[list] = None) -> int:
         return 1
     finally:
         if sedona is not None:
+            if not args.verbose:
+                # Windows cannot delete Spark's temp jars while the JVM exits and logs harmless ERROR lines
+                # ("Failed to delete ... slf4j-api jar"). The work is finished here, so silence the log first.
+                try:
+                    sedona.sparkContext.setLogLevel("OFF")
+                except Exception:  # noqa: BLE001
+                    pass
             sedona.stop()
 
 
