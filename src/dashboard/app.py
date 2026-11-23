@@ -60,27 +60,37 @@ st.markdown(
 
 def main() -> None:
     st.title("GeoPulse Hyperlocal Retail Mobility Analytics")
-    st.caption("Day 5 Visualization Lead - Day-Type Profiles, Dynamic KPIs & Dwell Segments")
+    st.caption("Day 6 Visualization Lead - Snowflake Hook, Engagement Index & CSV Export")
 
     with st.sidebar:
         st.header("Filters")
-        day_type = st.radio("Day Profile", options=["Weekday", "Weekend"], index=0)
+        if st.button("Reset Filters", width="stretch"):
+            st.session_state["day_type"] = "Weekday"
+            st.session_state["selected_zone"] = "All Zones"
+            st.session_state["selected_store"] = "All Stores"
+            st.session_state["window_mode"] = "Full Day (24h)"
+            st.session_state["min_dwell"] = 0.0
+
+        day_type = st.radio("Day Profile", options=["Weekday", "Weekend"], index=0, key="day_type")
 
         catalog_df = get_store_footfall_data(day_type=day_type)
         zone_options = ["All Zones"] + sorted(catalog_df["zone"].unique().tolist())
-        selected_zone = st.selectbox("Retail Zone", options=zone_options, index=0)
+        selected_zone = st.selectbox("Retail Zone", options=zone_options, index=0, key="selected_zone")
 
         filtered_catalog = (
             catalog_df if selected_zone == "All Zones"
             else catalog_df[catalog_df["zone"] == selected_zone]
         )
         store_options = ["All Stores"] + filtered_catalog["store_name"].tolist()
-        selected_store = st.selectbox("Store Location", options=store_options, index=0)
+        if st.session_state.get("selected_store", "All Stores") not in store_options:
+            st.session_state["selected_store"] = "All Stores"
+        selected_store = st.selectbox("Store Location", options=store_options, index=0, key="selected_store")
 
         window_mode = st.radio(
             "Time Window",
             options=["Full Day (24h)", "Peak Hours (17:00-21:00)"],
             index=0,
+            key="window_mode",
         )
         min_dwell = st.slider(
             "Minimum Avg Dwell (mins)",
@@ -88,6 +98,7 @@ def main() -> None:
             max_value=25.0,
             value=0.0,
             step=2.5,
+            key="min_dwell",
         )
 
     hourly_df, stores_df, source_status = load_mobility_data(
@@ -107,11 +118,11 @@ def main() -> None:
     col1.metric("Window GPS Pings", summary["window_pings"], f"{day_type} | {window_mode}")
     col2.metric("Filtered Footfall", summary["filtered_footfall"], summary["store_count"])
     col3.metric("Peak Hour", summary["peak_hour"], summary["peak_pings"])
-    col4.metric("Avg Store Dwell", summary["avg_dwell"], "Active store selection")
+    col4.metric("Avg Store Dwell", summary["avg_dwell"], summary["avg_engagement"])
 
     tab_overview, tab_stores, tab_pipeline = st.tabs([
         "Overview & Day Comparison",
-        "Store Footfall & Dwell Segments",
+        "Store Footfall & Engagement",
         "Staging & Pipeline",
     ])
 
@@ -144,11 +155,11 @@ def main() -> None:
             st.line_chart(compare_df, height=280)
 
     with tab_stores:
-        st.subheader("Estimated Store Footfall")
+        st.subheader("Estimated Store Footfall & Engagement Index")
         if stores_df.empty:
             st.info("No stores match the current zone or minimum dwell filter.")
         else:
-            st.bar_chart(stores_df.set_index("store_name")[["estimated_footfall"]], height=290)
+            st.bar_chart(stores_df.set_index("store_name")[["estimated_footfall", "engagement_index"]], height=300)
 
             st.subheader("Dwell Segment Distribution")
             segment_counts = (
@@ -159,6 +170,13 @@ def main() -> None:
             st.bar_chart(segment_counts.set_index("dwell_segment")[["stores"]], height=220)
 
             st.dataframe(stores_df, width="stretch", hide_index=True)
+            csv_bytes = stores_df.to_csv(index=False).encode("utf-8")
+            st.download_button(
+                label="Download Filtered Store Metrics (CSV)",
+                data=csv_bytes,
+                file_name=f"geopulse_store_metrics_{day_type.lower()}.csv",
+                mime="text/csv",
+            )
 
     with tab_pipeline:
         st.subheader("Snowflake & dbt Staging Readiness")
@@ -171,12 +189,12 @@ def main() -> None:
             "Status": [
                 "View Built (Day 3)",
                 "View Built (Day 3)",
-                "Day 5 Profile & Dwell Engine Active",
+                "Day 6 Snowflake Hook + Fallback Active",
             ],
             "Next Step": [
-                "Connect live row metrics",
-                "Connect store attributes",
-                "Swap in mart/staging queries",
+                "Query live pings when loaded",
+                "Query live stores when loaded",
+                "Swap in final MARTS models",
             ],
         })
         st.dataframe(pipeline_df, width="stretch", hide_index=True)

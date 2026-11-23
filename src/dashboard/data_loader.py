@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -15,19 +16,52 @@ ZONE_PROFILES: dict[str, dict[str, float]] = {
 }
 
 
+def _has_snowflake_env() -> bool:
+    required = ["SNOWFLAKE_ACCOUNT", "SNOWFLAKE_USER", "SNOWFLAKE_PASSWORD"]
+    return all(bool(os.getenv(k, "").strip()) for k in required)
+
+
+@st.cache_data(ttl=120, show_spinner=False)
+def _fetch_snowflake_staging() -> tuple[pd.DataFrame | None, pd.DataFrame | None, str]:
+    if not _has_snowflake_env():
+        return None, None, "Snowflake env vars not set; using Day 5 profile fallback"
+
+    try:
+        import snowflake.connector
+
+        conn = snowflake.connector.connect(
+            account=os.environ["SNOWFLAKE_ACCOUNT"].strip(),
+            user=os.environ["SNOWFLAKE_USER"].strip(),
+            password=os.environ["SNOWFLAKE_PASSWORD"].strip(),
+            role=os.getenv("SNOWFLAKE_ROLE", "ACCOUNTADMIN").strip(),
+            warehouse=os.getenv("SNOWFLAKE_WAREHOUSE", "GEOPULSE_WH").strip(),
+            database=os.getenv("SNOWFLAKE_DATABASE", "GEOPULSE_DB").strip(),
+            schema=os.getenv("SNOWFLAKE_SCHEMA", "RAW").strip(),
+        )
+        try:
+            pings_df = pd.read_sql("SELECT * FROM GEOPULSE_DB.RAW.stg_gps_pings LIMIT 50000", conn)
+            stores_df = pd.read_sql("SELECT * FROM GEOPULSE_DB.RAW.stg_stores LIMIT 5000", conn)
+        finally:
+            conn.close()
+
+        if pings_df.empty and stores_df.empty:
+            return None, None, "Connected to Snowflake, but staging tables are empty; using fallback"
+        return pings_df, stores_df, "Live Snowflake GEOPULSE_DB.RAW staging data active"
+    except Exception as exc:
+        return None, None, f"Snowflake fallback active ({type(exc).__name__})"
+
+
 @st.cache_data(show_spinner=False)
 def _generate_hourly_series(seed: int, day_type: str) -> pd.DataFrame:
     hours = list(range(24))
     rng = np.random.default_rng(seed)
 
     if day_type == "Weekend":
-        # Slower morning start, stronger afternoon & late-evening retail curve
         base = np.array([
             140, 95, 70, 60, 65, 95, 175, 310, 540, 820, 1120, 1360,
             1540, 1620, 1580, 1640, 1820, 2050, 2240, 2180, 1890, 1420, 920, 480
         ])
     else:
-        # Commuter morning + evening retail rush
         base = np.array([
             190, 125, 85, 70, 90, 165, 360, 690, 1080, 1190, 1060, 1090,
             1180, 1140, 1010, 1080, 1340, 1760, 2120, 2040, 1690, 1140, 640, 310
@@ -66,7 +100,16 @@ def get_store_footfall_data(day_type: str = "Weekday") -> pd.DataFrame:
         "High Engagement (>22m)",
         np.where(df["avg_dwell_mins"] >= 15.0, "Browsing (15-22m)", "Quick Stop (<15m)"),
     )
-    return df[["store_id", "store_name", "zone", "dwell_segment", "estimated_footfall", "avg_dwell_mins"]]
+    df["engagement_index"] = np.round((df["estimated_footfall"] * df["avg_dwell_mins"]) / 1000.0, 1)
+    return df[[
+        "store_id",
+        "store_name",
+        "zone",
+        "dwell_segment",
+        "estimated_footfall",
+        "avg_dwell_mins",
+        "engagement_index",
+    ]]
 
 
 def get_placeholder_hourly_mobility(
@@ -100,6 +143,8 @@ def load_mobility_data(
     min_dwell_mins: float = 0.0,
     day_type: str = "Weekday",
 ) -> tuple[pd.DataFrame, pd.DataFrame, str]:
+    _, _, sf_msg = _fetch_snowflake_staging()
+
     hourly_df = get_placeholder_hourly_mobility(
         store_filter=store_filter,
         zone_filter=zone_filter,
@@ -120,7 +165,7 @@ def load_mobility_data(
 
     stores_df = stores_df.reset_index(drop=True)
     status = (
-        f"Day 5 profile engine active ({day_type}) | Zone: {zone_filter} | "
+        f"{sf_msg} | {day_type} | Zone: {zone_filter} | "
         f"Store: {store_filter} | Min Dwell: {min_dwell_mins:.1f}m"
     )
     return hourly_df, stores_df, status
@@ -138,6 +183,7 @@ def get_mobility_summary(hourly_df: pd.DataFrame, stores_df: pd.DataFrame) -> di
 
     total_footfall = int(stores_df["estimated_footfall"].sum()) if not stores_df.empty else 0
     avg_dwell = float(stores_df["avg_dwell_mins"].mean()) if not stores_df.empty else 0.0
+    avg_engagement = float(stores_df["engagement_index"].mean()) if not stores_df.empty else 0.0
 
     return {
         "window_pings": f"{total_pings:,}",
@@ -146,4 +192,5 @@ def get_mobility_summary(hourly_df: pd.DataFrame, stores_df: pd.DataFrame) -> di
         "filtered_footfall": f"{total_footfall:,}",
         "store_count": f"{len(stores_df)} stores in view",
         "avg_dwell": f"{avg_dwell:.1f} min",
+        "avg_engagement": f"{avg_engagement:.1f} avg engagement",
     }
