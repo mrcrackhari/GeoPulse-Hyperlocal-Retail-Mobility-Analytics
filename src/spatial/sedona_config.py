@@ -1,4 +1,4 @@
-"""Spark + Apache Sedona session factory for GeoPulse (Member 2, Day 1).
+﻿"""Spark + Apache Sedona session factory for GeoPulse (Member 2, Day 1).
 
 Usage
 -----

@@ -1,4 +1,15 @@
+"""Tests for src/spatial/generate_stores.py and the committed seed files (Member 2, Day 2).
 
+Run from the repository root:   pytest tests/test_stores.py -q
+
+Needs only numpy, scipy and pytest. The shapely / pyproj cross-checks are skipped when those
+packages are not installed. The tests read the COMMITTED files in data/seed/ (that is the
+contract Members 1 and 3 build on), and re-generate into a temp folder for the determinism check.
+
+Unit note: store distances are EPSG:32643 grid metres (the unit the generator enforces).
+Inside the city, grid metres are 0.02% - 0.09% longer than ground metres; the scale test below
+pins that down so "600 m" really means >= 599.4 m on the ground.
+"""
 from __future__ import annotations
 
 import csv
