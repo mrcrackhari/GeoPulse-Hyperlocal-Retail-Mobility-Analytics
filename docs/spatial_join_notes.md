@@ -189,6 +189,31 @@ Member 3's frontend reads the polygons through the exports.
 
 ---
 
+## 2b. Input validation and lon/lat-order smoke join (Day 3)
+
+**Files:** `src/spatial/validate_inputs.py`, `tests/test_spatial_join.py`
+
+**Run**
+```
+python -m src.spatial.validate_inputs --stores data\seed\stores.csv
+python -m src.spatial.validate_inputs --stores data\seed\stores.csv --pings <pings file> --smoke-join
+pytest tests\test_spatial_join.py -q
+```
+Exit code 0 = all PASS, 1 = at least one FAIL.
+
+**What is validated**
+- Stores (18 checks): columns, blanks, unique `S####` ids, centres numeric / in box / not swapped, radius 500, zone fields, WKT parses, ring closed, WKT is (lon lat), vertices within box + 0.006 deg, area > 0, CCW, no self-crossing, centre inside own polygon.
+- Pings (9 checks, chunked): columns, nulls, numeric, inside city box, not swapped, timestamps parse / naive / in window, `D######` ids.
+- Smoke join: 100,000 pings x 5,000 polygons, broadcast `ST_Intersects`, compared with a numpy brute force; six planted points with known answers (A centre -> S0001, B centre -> S0002, lens -> both, 420 m west of A -> S0001, 420 m east of B -> S0002, 600 m north of A -> none).
+
+**Rule:** `ST_Point(lon, lat)` - longitude first. `h3.geo_to_h3(lat, lon, res)` - latitude first. Store A's centre is inside S0001 only with the first order.
+
+**Deviation:** edge-store circles overhang the city box by up to ~500 m, so the polygon-in-box check allows a 0.006 deg margin (centres must still be strictly inside the box).
+
+**Results (fill in after running on your machine):** validation ___/18 PASS; smoke join ___ s; tests ___ passed.
+
+---
+
 ## 3. Spatial join design (Day 4 / Day 5)
 
 ### 3.1 Output contract confirmed (Day 4)
@@ -247,60 +272,48 @@ Result (fill in after running `pytest tests\test_spatial_join.py -q`): Sedona ro
 python -m src.spatial.spatial_join --pings data\raw\gps_pings.parquet --driver-memory 4g --audit
 python -m src.spatial.spatial_join --pings data\raw\gps_pings.parquet --driver-memory 4g --by-day --audit   # if OOM
 ```
-Input: Member 1's full `data/raw/gps_pings.parquet/` (30 daily files, 9.8–10.2 M rows) — or, if it is not ready, the stand-in `python -m src.spatial.make_demo_pings --rows 10000000 --out data\raw\demo_days_10m --split-days` (label the run "stand-in data" below).
+Input: Member 1's full `data/raw/gps_pings.parquet/` (30 daily files, 9.8–10.2 M rows). If it is not ready yet, `python -m src.spatial.make_demo_pings --rows 10000000 --out data\raw\gps_pings.parquet --split-days` writes stand-in daily files in the same layout (local only, git-ignored; label the run "stand-in data" below, and delete that folder when Member 1's real data arrives).
 
 | Field | Value |
 |---|---|
-| Machine (CPU cores / RAM / OS) | |
-| Input (real or stand-in) | |
-| Rows in | |
+| Machine (CPU cores / RAM / OS) | Windows laptop, local[*] (fill in cores / RAM) |
+| Input (real or stand-in) | stand-in: 30 daily files, uniform random pings (`make_demo_pings`), not Member 1's data |
+| Rows in | 9,999,996 |
 | Stores | 5,000 |
-| Rows out (ping, store matches) | |
-| Matches per 100 pings | |
-| Runtime | |
-| Pings per second | |
+| Rows out (ping, store matches) | 3,997,656 (5,000 stores hit) |
+| Matches per 100 pings | 39.98 |
+| Runtime | 22 s end to end (the join itself 16.7 s) |
+| Pings per second | about 462,000 |
 | Driver memory | 4g |
-| Broadcast in plan | |
-| Peak memory (process tree) | |
-| Finished without OOM | yes / no |
-| Contract 9.3 check | PASS / FAIL |
+| Broadcast in plan | yes |
+| Peak memory (process tree) | 2,583 MB |
+| Finished without OOM | yes |
+| Contract 9.3 check | PASS |
 
 Target: < 8 minutes on an 8-core laptop (record the actual, even if slower).
 If OOM: apply the ladder in section 3.4 (`--by-day` first) and record each attempt as a row in section 5.
 
-## 5. Memory audit — TODO (Day 7)
+## 5. Memory audit — Day 7
+
+Input: the 10 M-row stand-in (30 daily files), `--driver-memory 4g` for every run; only shuffle partitions, `--by-day` and the BROADCAST hint change. Each run is a fresh process (fresh Spark JVM). Run with `python -m src.spatial.memory_audit` (table also saved to `data/processed/memory_audit.md`). "Peak memory" = highest resident memory of the Python process plus the Spark JVM.
 
 | Run | Shuffle partitions | `--by-day` | Broadcast hint | Driver memory | Runtime | Peak memory | OOM? |
 |---|---|---|---|---|---|---|---|
-| 1 | | | | | | | |
-| 2 | | | | | | | |
-| 3 | | | | | | | |
+| 1 | 64 | no | yes | 4g | 22 s (0.4 min) | 2,583 MB | no |
+| 2 | 16 | no | yes | 4g | 17 s (0.3 min) | 3,734 MB | no |
+| 3 | 200 | no | yes | 4g | 34 s (0.6 min) | 3,350 MB | no |
+| 4 | 64 | yes | yes | 4g | 94 s (1.6 min) | 2,411 MB | no |
+| 5 | 64 | no | no | 4g | 54 s (0.9 min) | 4,799 MB | no |
+
+**Observations**
+- All finished runs wrote the identical 3,997,656 rows: the settings change speed and memory, never the answer.
+- Every run used a broadcast join and none ran out of memory. A broadcast join has no shuffle, so shuffle partitions barely matter; the 17 s / 22 s / 34 s spread is mostly JVM warm-up and one-off timing noise (one run per setting).
+- `--by-day` is about 4x slower (94 s, 30 separate jobs) but has the lowest peak memory (2,411 MB). It is the fallback if a bigger input ever runs out of memory, not the default.
+- Dropping the BROADCAST hint (run 5) still finished without OOM but was about 2.5x slower than the baseline (54 s vs 22 s) and used the most memory of all runs (4,799 MB, close to the 4g driver limit). The hint stays.
+- Run 2 (16 partitions) was fastest but also had the highest peak memory (3,734 MB), so the speed gain does not justify changing the default.
+
+**Chosen defaults:** shuffle partitions stay at **64** (`DEFAULT_SHUFFLE_PARTITIONS` in `sedona_config.py`, unchanged); full run without `--by-day`; BROADCAST hint kept. `--by-day` is the documented fallback.
 
 ## 6. Test results — TODO (Day 9)
 
 Spark UI screenshot: `docs/screenshots/` (placeholder).
-
----
-
-## Day 3 - Input validation and lon/lat-order smoke join
-
-**Files:** `src/spatial/validate_inputs.py`, `tests/test_spatial_join.py`
-
-**Run**
-```
-python -m src.spatial.validate_inputs --stores data\seed\stores.csv
-python -m src.spatial.validate_inputs --stores data\seed\stores.csv --pings <pings file> --smoke-join
-pytest tests\test_spatial_join.py -q
-```
-Exit code 0 = all PASS, 1 = at least one FAIL.
-
-**What is validated**
-- Stores (18 checks): columns, blanks, unique `S####` ids, centres numeric / in box / not swapped, radius 500, zone fields, WKT parses, ring closed, WKT is (lon lat), vertices within box + 0.006 deg, area > 0, CCW, no self-crossing, centre inside own polygon.
-- Pings (9 checks, chunked): columns, nulls, numeric, inside city box, not swapped, timestamps parse / naive / in window, `D######` ids.
-- Smoke join: 100,000 pings x 5,000 polygons, broadcast `ST_Intersects`, compared with a numpy brute force; six planted points with known answers (A centre -> S0001, B centre -> S0002, lens -> both, 420 m west of A -> S0001, 420 m east of B -> S0002, 600 m north of A -> none).
-
-**Rule:** `ST_Point(lon, lat)` - longitude first. `h3.geo_to_h3(lat, lon, res)` - latitude first. Store A's centre is inside S0001 only with the first order.
-
-**Deviation:** edge-store circles overhang the city box by up to ~500 m, so the polygon-in-box check allows a 0.006 deg margin (centres must still be strictly inside the box).
-
-**Results (fill in after running on your machine):** validation ___/18 PASS; smoke join ___ s; tests ___ passed.
