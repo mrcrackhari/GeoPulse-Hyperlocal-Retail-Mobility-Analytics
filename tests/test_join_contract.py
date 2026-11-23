@@ -1,4 +1,4 @@
-"""Tests for src/spatial/spatial_join.py (Member 2, Day 4): contract 9.3, helpers and a live Sedona run.
+"""Tests for src/spatial/spatial_join.py: contract 9.3, helpers, demo pings, live Sedona run, memory-audit runner.
 
 Pure-Python tests run anywhere. The live tests skip automatically without pyspark / apache-sedona /
 pyarrow / Java 17.
@@ -121,6 +121,7 @@ def test_demo_pings_are_deterministic():
 
 
 # ------------------------------------------------------------------------ live Sedona run ---
+# ------------------------------------------------------------------------ live Sedona run ---
 @pytest.fixture(scope="module")
 def sedona_session():
     pytest.importorskip("pyspark")
@@ -201,3 +202,46 @@ def test_notes_row_and_peak_memory():
     with sj.PeakMemory(interval=0.05) as m:
         pass                                              # must start/stop cleanly with or without psutil
     assert m.peak_mb is None or m.peak_mb > 0
+
+# ------------------------------------------------------------------------------- Day 7 ---
+from src.spatial import memory_audit as ma  # noqa: E402
+
+
+def test_audit_plan_varies_all_three_knobs():
+    assert len(ma.DEFAULT_RUNS) >= 3
+    assert len({r.shuffle_partitions for r in ma.DEFAULT_RUNS}) >= 2
+    assert {r.by_day for r in ma.DEFAULT_RUNS} == {True, False}
+    assert {r.broadcast_hint for r in ma.DEFAULT_RUNS} == {True, False}
+
+
+def test_build_command_flags():
+    base = ma.build_command(ma.RunSpec(64, False, True), "p", "s", "o", "a.json", "4g", python="py")
+    assert "--by-day" not in base and "--no-broadcast-hint" not in base and base[:3] == ["py", "-m", "src.spatial.spatial_join"]
+    full = ma.build_command(ma.RunSpec(16, True, False), "p", "s", "o", "a.json", "4g", python="py")
+    assert "--by-day" in full and "--no-broadcast-hint" in full and full[full.index("--shuffle-partitions") + 1] == "16"
+
+
+def _ok(i, spec, secs, peak, rows=100):
+    return ma.run_result(i, spec, "4g", 0, {"runtime_seconds": secs, "peak_process_tree_rss_mb": peak, "rows_out": rows,
+                                            "broadcast_in_plan": True}, secs)
+
+
+def test_table_best_and_failure_handling():
+    a, b = _ok(1, ma.RunSpec(64, False, True), 300, 3000), _ok(2, ma.RunSpec(16, True, True), 200, 2500)
+    bad = ma.run_result(3, ma.RunSpec(200, False, False), "4g", 1, None, 42.0)
+    assert ma.pick_best([a, b, bad])["run"] == 2 and ma.pick_best([bad]) is None
+    table = ma.render_table([a, b, bad])
+    assert table.count("\n") == 4 and "YES / failed" in table and "failed after 42 s" in table
+    assert "| 2 | 16 | yes | yes | 4g | 200 s (3.3 min) | 2,500 MB | no |" in table
+    assert ma.check_rows_agree([a, b, bad]) and not ma.check_rows_agree([a, _ok(4, ma.RunSpec(8, False, True), 1, 1, rows=99)])
+    assert "DEFAULT_SHUFFLE_PARTITIONS = 16" in ma.recommendation(ma.pick_best([a, b]))
+
+
+def test_input_notes_warn_for_single_file_by_day():
+    assert ma.input_notes(1, 1) and not ma.input_notes(30, 1) and not ma.input_notes(1, 0)
+
+
+# Day 7 - the BROADCAST-hint switch used by the memory audit runs
+def test_no_hint_sql_has_no_broadcast_hint():
+    assert "BROADCAST" not in sj.JOIN_SQL_NO_HINT and "ST_Intersects" in sj.JOIN_SQL_NO_HINT
+    assert sj.build_parser().parse_args(["--no-broadcast-hint"]).no_broadcast_hint
