@@ -15,3 +15,6 @@
 - [x] Data quality tests passing (null checks).
 - [x] Cannibalization SQL logic drafted.
 
+## 4. Blockers
+- [ ] Member 2: Spatial join output pending.
+- [ ] Member 3: Dashboard scaffold pending.

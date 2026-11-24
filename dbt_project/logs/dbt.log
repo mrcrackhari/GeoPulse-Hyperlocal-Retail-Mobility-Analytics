@@ -2843,3 +2843,349 @@ WHERE "device_id" IS NULL
 [0m17:59:36.102324 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000240712F4DD0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000240130E5440>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000240130E50D0>]}
 [0m17:59:36.103131 [debug] [MainThread]: Flushing usage events
 [0m17:59:37.692345 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m17:22:45.046415 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A3A1389BE0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A39E31D6D0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A3A3A3BC50>]}
+
+
+============================== 17:22:45.056413 | f3087661-0537-4ab5-8d55-45a3adc8ddf0 ==============================
+[0m17:22:45.056413 [info ] [MainThread]: Running with dbt=1.13.0-b1
+[0m17:22:45.057518 [debug] [MainThread]: running dbt with arguments {'maximum_seed_size_mib': '1', 'no_print': 'None', 'version_check': 'True', 'target_path': 'None', 'static_parser': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'printer_width': '80', 'write_json': 'True', 'empty': 'False', 'log_cache_events': 'False', 'introspect': 'True', 'cache_selected_only': 'False', 'log_format': 'default', 'debug': 'False', 'fail_fast': 'False', 'profiles_dir': 'C:\\Users\\TUF\\GeoPulse Hyper-Local Retail Mobility Analytics\\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\\dbt_project', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'partial_parse': 'True', 'indirect_selection': 'eager', 'hints_enabled': 'True', 'use_colors': 'True', 'use_experimental_parser': 'False', 'invocation_command': 'dbt run', 'log_path': 'C:\\Users\\TUF\\GeoPulse Hyper-Local Retail Mobility Analytics\\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\\dbt_project\\logs'}
+[0m17:22:45.058017 [debug] [MainThread]: Tracking: tracking
+[0m17:22:49.593175 [debug] [MainThread]: Snowflake adapter: Setting snowflake.connector to ERROR (file logging only)
+[0m17:22:49.593775 [debug] [MainThread]: Snowflake adapter: Setting botocore to ERROR (file logging only)
+[0m17:22:49.594184 [debug] [MainThread]: Snowflake adapter: Setting boto3 to ERROR (file logging only)
+[0m17:22:53.880772 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': 'f3087661-0537-4ab5-8d55-45a3adc8ddf0', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A3A187EC40>]}
+[0m17:22:53.965622 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': 'f3087661-0537-4ab5-8d55-45a3adc8ddf0', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A39F9B7350>]}
+[0m17:22:53.968397 [info ] [MainThread]: Registered adapter: snowflake=1.12.5
+[0m17:22:54.608721 [debug] [MainThread]: checksum: a51ebfa8ab21d9183453db914e99d7c3fa9dc1599494d9d66466612897169981, vars: {}, profile: geopulse, target: dev, version: 1.13.0b1
+[0m17:22:57.228805 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 0 files changed.
+[0m17:22:57.229327 [debug] [MainThread]: Nothing changed, skipping partial parsing.
+[0m17:22:57.229656 [debug] [MainThread]: Partial parsing enabled, no changes found, skipping parsing
+[0m17:22:57.240840 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': 'f3087661-0537-4ab5-8d55-45a3adc8ddf0', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A3C53CE350>]}
+[0m17:22:57.437504 [debug] [MainThread]: Wrote artifact WritableManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\manifest.json
+[0m17:22:57.466826 [debug] [MainThread]: Wrote artifact SemanticManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\semantic_manifest.json
+[0m17:22:57.535220 [debug] [MainThread]: Wrote artifact OsiDocument to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\osi_document.json
+[0m17:22:57.563733 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': 'f3087661-0537-4ab5-8d55-45a3adc8ddf0', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A3C5413F20>]}
+[0m17:22:57.564343 [info ] [MainThread]: Found 4 models, 1 test, 2 sources, 563 macros
+[0m17:22:57.564896 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'f3087661-0537-4ab5-8d55-45a3adc8ddf0', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A3C54E0BB0>]}
+[0m17:22:57.567361 [info ] [MainThread]: 
+[0m17:22:57.568190 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m17:22:57.568736 [info ] [MainThread]: 
+[0m17:22:57.569508 [debug] [MainThread]: Acquiring new snowflake connection 'master'
+[0m17:22:57.577218 [debug] [ThreadPool]: Acquiring new snowflake connection 'list_GEOPULSE_DB'
+[0m17:22:57.601720 [debug] [ThreadPool]: Using snowflake connection "list_GEOPULSE_DB"
+[0m17:22:57.602244 [debug] [ThreadPool]: On list_GEOPULSE_DB: show terse schemas in database GEOPULSE_DB
+    limit 10000
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "connection_name": "list_GEOPULSE_DB"} */
+[0m17:22:57.602586 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m17:22:59.691881 [debug] [ThreadPool]: SQL status: SUCCESS 4 in 2.089 seconds
+[0m17:22:59.706325 [debug] [ThreadPool]: Acquiring new snowflake connection 'list_GEOPULSE_DB_DBT_STAGING'
+[0m17:22:59.722275 [debug] [ThreadPool]: Using snowflake connection "list_GEOPULSE_DB_DBT_STAGING"
+[0m17:22:59.722982 [debug] [ThreadPool]: On list_GEOPULSE_DB_DBT_STAGING: show objects in GEOPULSE_DB.DBT_STAGING
+    limit 10000
+    
+
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "connection_name": "list_GEOPULSE_DB_DBT_STAGING"} */;
+[0m17:22:59.723484 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m17:23:03.351061 [debug] [ThreadPool]: SQL status: SUCCESS 4 in 3.628 seconds
+[0m17:23:03.360280 [debug] [ThreadPool]: Using snowflake connection "list_GEOPULSE_DB_DBT_STAGING"
+[0m17:23:03.360859 [debug] [ThreadPool]: On list_GEOPULSE_DB_DBT_STAGING: show user functions in GEOPULSE_DB.DBT_STAGING
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "connection_name": "list_GEOPULSE_DB_DBT_STAGING"} */
+[0m17:23:03.850977 [debug] [ThreadPool]: SQL status: SUCCESS 0 in 0.490 seconds
+[0m17:23:03.855858 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'f3087661-0537-4ab5-8d55-45a3adc8ddf0', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A3C5540A10>]}
+[0m17:23:03.920198 [debug] [Thread-1 (]: Began running node model.geopulse.stg_gps_pings
+[0m17:23:03.921541 [debug] [Thread-2 (]: Began running node model.geopulse.stg_ping_store_matches
+[0m17:23:03.920954 [info ] [Thread-1 (]: 1 of 4 START sql view model DBT_STAGING.stg_gps_pings .......................... [RUN]
+[0m17:23:03.922788 [debug] [Thread-1 (]: Acquiring new snowflake connection 'model.geopulse.stg_gps_pings'
+[0m17:23:03.923298 [debug] [Thread-1 (]: Began compiling node model.geopulse.stg_gps_pings
+[0m17:23:03.930706 [debug] [Thread-1 (]: Writing injected SQL for node "model.geopulse.stg_gps_pings"
+[0m17:23:03.922090 [info ] [Thread-2 (]: 2 of 4 START sql view model DBT_STAGING.stg_ping_store_matches ................. [RUN]
+[0m17:23:03.931960 [debug] [Thread-2 (]: Acquiring new snowflake connection 'model.geopulse.stg_ping_store_matches'
+[0m17:23:03.932555 [debug] [Thread-2 (]: Began compiling node model.geopulse.stg_ping_store_matches
+[0m17:23:03.935256 [debug] [Thread-2 (]: Writing injected SQL for node "model.geopulse.stg_ping_store_matches"
+[0m17:23:03.936494 [debug] [Thread-2 (]: Began executing node model.geopulse.stg_ping_store_matches
+[0m17:23:03.947691 [debug] [Thread-1 (]: Began executing node model.geopulse.stg_gps_pings
+[0m17:23:03.986269 [debug] [Thread-1 (]: Writing runtime sql for node "model.geopulse.stg_gps_pings"
+[0m17:23:03.989063 [debug] [Thread-2 (]: Writing runtime sql for node "model.geopulse.stg_ping_store_matches"
+[0m17:23:03.990428 [debug] [Thread-1 (]: Using snowflake connection "model.geopulse.stg_gps_pings"
+[0m17:23:03.990912 [debug] [Thread-1 (]: On model.geopulse.stg_gps_pings: create or replace   view GEOPULSE_DB.DBT_STAGING.stg_gps_pings
+  
+  
+  
+  
+  as (
+    
+
+SELECT
+    "device_id",
+    "lat",
+    "lon",
+    "timestamp" as ping_time
+FROM GEOPULSE_DB.RAW.GPS_PINGS
+  )
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "node_id": "model.geopulse.stg_gps_pings"} */;
+[0m17:23:03.991524 [debug] [Thread-2 (]: Using snowflake connection "model.geopulse.stg_ping_store_matches"
+[0m17:23:03.991969 [debug] [Thread-1 (]: Opening a new connection, currently in state init
+[0m17:23:03.992420 [debug] [Thread-2 (]: On model.geopulse.stg_ping_store_matches: create or replace   view GEOPULSE_DB.DBT_STAGING.stg_ping_store_matches
+  
+  
+  
+  
+  as (
+    
+
+SELECT
+    "device_id" as device_id,
+    "store_id" as store_id,
+    "timestamp" as ping_time,
+    "lat" as lat,
+    "lon" as lon
+FROM GEOPULSE_DB.RAW.PING_STORE_MATCHES
+  )
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "node_id": "model.geopulse.stg_ping_store_matches"} */;
+[0m17:23:03.993278 [debug] [Thread-2 (]: Opening a new connection, currently in state init
+[0m17:23:05.145839 [debug] [Thread-2 (]: SQL status: SUCCESS 1 in 1.152 seconds
+[0m17:23:05.190777 [debug] [Thread-2 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'f3087661-0537-4ab5-8d55-45a3adc8ddf0', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A3C5503890>]}
+[0m17:23:05.191870 [info ] [Thread-2 (]: 2 of 4 OK created sql view model DBT_STAGING.stg_ping_store_matches ............ [[32mSUCCESS 1[0m in 1.25s]
+[0m17:23:05.193862 [debug] [Thread-2 (]: Finished running node model.geopulse.stg_ping_store_matches
+[0m17:23:05.194630 [debug] [Thread-3 (]: Began running node model.geopulse.int_cannibalization
+[0m17:23:05.195220 [info ] [Thread-3 (]: 3 of 4 START sql view model DBT_STAGING.int_cannibalization .................... [RUN]
+[0m17:23:05.196535 [debug] [Thread-3 (]: Acquiring new snowflake connection 'model.geopulse.int_cannibalization'
+[0m17:23:05.196971 [debug] [Thread-3 (]: Began compiling node model.geopulse.int_cannibalization
+[0m17:23:05.199347 [debug] [Thread-3 (]: Writing injected SQL for node "model.geopulse.int_cannibalization"
+[0m17:23:05.200522 [debug] [Thread-3 (]: Began executing node model.geopulse.int_cannibalization
+[0m17:23:05.203371 [debug] [Thread-3 (]: Writing runtime sql for node "model.geopulse.int_cannibalization"
+[0m17:23:05.204758 [debug] [Thread-3 (]: Using snowflake connection "model.geopulse.int_cannibalization"
+[0m17:23:05.205264 [debug] [Thread-3 (]: On model.geopulse.int_cannibalization: create or replace   view GEOPULSE_DB.DBT_STAGING.int_cannibalization
+  
+  
+  
+  
+  as (
+    
+
+WITH store_visits AS (
+    -- Get the unique devices that visited each store
+    SELECT DISTINCT
+        store_id,
+        device_id
+    FROM GEOPULSE_DB.DBT_STAGING.stg_ping_store_matches 
+    -- Note: This references Member 2's table which we will load soon
+)
+
+SELECT
+    a.store_id AS focal_store_id,
+    b.store_id AS other_store_id,
+    COUNT(DISTINCT a.device_id) AS shared_visitors
+FROM store_visits a
+JOIN store_visits b 
+    ON a.device_id = b.device_id 
+    AND a.store_id != b.store_id
+GROUP BY 
+    a.store_id, 
+    b.store_id
+  )
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "node_id": "model.geopulse.int_cannibalization"} */;
+[0m17:23:05.205691 [debug] [Thread-3 (]: Opening a new connection, currently in state init
+[0m17:23:05.467577 [debug] [Thread-1 (]: SQL status: SUCCESS 1 in 1.476 seconds
+[0m17:23:05.472252 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'f3087661-0537-4ab5-8d55-45a3adc8ddf0', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A3C554B6A0>]}
+[0m17:23:05.473312 [info ] [Thread-1 (]: 1 of 4 OK created sql view model DBT_STAGING.stg_gps_pings ..................... [[32mSUCCESS 1[0m in 1.55s]
+[0m17:23:05.474175 [debug] [Thread-1 (]: Finished running node model.geopulse.stg_gps_pings
+[0m17:23:06.207385 [debug] [Thread-3 (]: SQL status: SUCCESS 1 in 1.002 seconds
+[0m17:23:06.211405 [debug] [Thread-3 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'f3087661-0537-4ab5-8d55-45a3adc8ddf0', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A3C5602AD0>]}
+[0m17:23:06.212329 [info ] [Thread-3 (]: 3 of 4 OK created sql view model DBT_STAGING.int_cannibalization ............... [[32mSUCCESS 1[0m in 1.02s]
+[0m17:23:06.213580 [debug] [Thread-3 (]: Finished running node model.geopulse.int_cannibalization
+[0m17:23:06.214663 [debug] [Thread-4 (]: Began running node model.geopulse.store_cannibalization_metrics
+[0m17:23:06.215477 [info ] [Thread-4 (]: 4 of 4 START sql table model DBT_STAGING.store_cannibalization_metrics ......... [RUN]
+[0m17:23:06.216768 [debug] [Thread-4 (]: Acquiring new snowflake connection 'model.geopulse.store_cannibalization_metrics'
+[0m17:23:06.217186 [debug] [Thread-4 (]: Began compiling node model.geopulse.store_cannibalization_metrics
+[0m17:23:06.220614 [debug] [Thread-4 (]: Writing injected SQL for node "model.geopulse.store_cannibalization_metrics"
+[0m17:23:06.222662 [debug] [Thread-4 (]: Began executing node model.geopulse.store_cannibalization_metrics
+[0m17:23:06.269561 [debug] [Thread-4 (]: Writing runtime sql for node "model.geopulse.store_cannibalization_metrics"
+[0m17:23:06.271492 [debug] [Thread-4 (]: Using snowflake connection "model.geopulse.store_cannibalization_metrics"
+[0m17:23:06.272106 [debug] [Thread-4 (]: On model.geopulse.store_cannibalization_metrics: create or replace transient table GEOPULSE_DB.DBT_STAGING.store_cannibalization_metrics
+    
+    
+    
+    
+    
+
+    as (
+
+WITH total_visitors AS (
+
+    -- Get total unique visitors per store
+    SELECT
+        store_id,
+        COUNT(DISTINCT device_id) AS store_visitors
+    FROM GEOPULSE_DB.DBT_STAGING.stg_ping_store_matches
+    GROUP BY store_id
+
+),
+
+cannibalization AS (
+
+    -- Get shared visitors from intermediate model
+    SELECT *
+    FROM GEOPULSE_DB.DBT_STAGING.int_cannibalization
+
+)
+
+SELECT
+    c.focal_store_id AS store_id,
+    c.other_store_id,
+
+    -- Focal store visitors
+    t.store_visitors,
+
+    -- Other store visitors (using LEFT JOIN)
+    ot.store_visitors AS other_store_visitors,
+
+    -- Shared visitors
+    c.shared_visitors,
+
+    -- Calculate percentage of focal store visitors
+    -- who also visit the other store
+    ROUND(
+        (c.shared_visitors * 100.0) / NULLIF(t.store_visitors, 0),
+        2
+    ) AS pct_store_visitors_also_visit_other
+
+FROM cannibalization c
+
+-- Join focal store visitors
+INNER JOIN total_visitors t
+    ON c.focal_store_id = t.store_id
+
+-- Join other store visitors
+LEFT JOIN total_visitors ot
+    ON c.other_store_id = ot.store_id
+
+WHERE c.shared_visitors > 0
+    )
+
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "node_id": "model.geopulse.store_cannibalization_metrics"} */;
+[0m17:23:06.272598 [debug] [Thread-4 (]: Opening a new connection, currently in state init
+[0m17:23:08.346036 [debug] [Thread-4 (]: SQL status: SUCCESS 72 in 2.073 seconds
+[0m17:23:08.349916 [debug] [Thread-4 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'f3087661-0537-4ab5-8d55-45a3adc8ddf0', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A3C52C2E50>]}
+[0m17:23:08.350808 [info ] [Thread-4 (]: 4 of 4 OK created sql table model DBT_STAGING.store_cannibalization_metrics .... [[32mSUCCESS 72[0m in 2.13s]
+[0m17:23:08.351723 [debug] [Thread-4 (]: Finished running node model.geopulse.store_cannibalization_metrics
+[0m17:23:08.353541 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m17:23:08.353979 [debug] [MainThread]: Connection 'list_GEOPULSE_DB' was left open.
+[0m17:23:08.354332 [debug] [MainThread]: On list_GEOPULSE_DB: Close
+[0m17:23:08.692142 [debug] [MainThread]: Connection 'list_GEOPULSE_DB_DBT_STAGING' was left open.
+[0m17:23:08.692848 [debug] [MainThread]: On list_GEOPULSE_DB_DBT_STAGING: Close
+[0m17:23:09.059860 [debug] [MainThread]: Connection 'model.geopulse.stg_gps_pings' was left open.
+[0m17:23:09.060360 [debug] [MainThread]: On model.geopulse.stg_gps_pings: Close
+[0m17:23:09.368110 [debug] [MainThread]: Connection 'model.geopulse.stg_ping_store_matches' was left open.
+[0m17:23:09.368648 [debug] [MainThread]: On model.geopulse.stg_ping_store_matches: Close
+[0m17:23:09.669775 [debug] [MainThread]: Connection 'model.geopulse.int_cannibalization' was left open.
+[0m17:23:09.670313 [debug] [MainThread]: On model.geopulse.int_cannibalization: Close
+[0m17:23:09.947188 [debug] [MainThread]: Connection 'model.geopulse.store_cannibalization_metrics' was left open.
+[0m17:23:09.947783 [debug] [MainThread]: On model.geopulse.store_cannibalization_metrics: Close
+[0m17:23:10.240316 [info ] [MainThread]: 
+[0m17:23:10.242704 [info ] [MainThread]: Finished running 1 table model, 3 view models in 0 hours 0 minutes and 12.67 seconds (12.67s).
+[0m17:23:10.246257 [debug] [MainThread]: Command end result
+[0m17:23:10.292225 [debug] [MainThread]: Wrote artifact WritableManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\manifest.json
+[0m17:23:10.295579 [debug] [MainThread]: Wrote artifact SemanticManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\semantic_manifest.json
+[0m17:23:10.298752 [debug] [MainThread]: Wrote artifact OsiDocument to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\osi_document.json
+[0m17:23:10.307126 [debug] [MainThread]: Wrote artifact RunExecutionResult to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\run_results.json
+[0m17:23:10.307534 [info ] [MainThread]: 
+[0m17:23:10.308132 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m17:23:10.308821 [info ] [MainThread]: 
+[0m17:23:10.309447 [info ] [MainThread]: Done. PASS=4 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=4
+[0m17:23:10.310895 [debug] [MainThread]: Command `dbt run` succeeded at 17:23:10.310733 after 25.51 seconds
+[0m17:23:10.311343 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A3A3A7A270>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A3A3811160>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002A3A3A343B0>]}
+[0m17:23:10.311767 [debug] [MainThread]: Flushing usage events
+[0m17:23:12.172721 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m17:23:28.255821 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002107F215BE0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002107C0AD6D0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002100190BC50>]}
+
+
+============================== 17:23:28.262262 | 6a6168ed-970a-4cef-b34c-0c96f7d15659 ==============================
+[0m17:23:28.262262 [info ] [MainThread]: Running with dbt=1.13.0-b1
+[0m17:23:28.263215 [debug] [MainThread]: running dbt with arguments {'maximum_seed_size_mib': '1', 'no_print': 'None', 'version_check': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'static_parser': 'True', 'target_path': 'None', 'printer_width': '80', 'write_json': 'True', 'empty': 'None', 'log_cache_events': 'False', 'introspect': 'True', 'cache_selected_only': 'False', 'fail_fast': 'False', 'debug': 'False', 'log_format': 'default', 'profiles_dir': 'C:\\Users\\TUF\\GeoPulse Hyper-Local Retail Mobility Analytics\\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\\dbt_project', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'partial_parse': 'True', 'indirect_selection': 'eager', 'hints_enabled': 'True', 'invocation_command': 'dbt test', 'use_experimental_parser': 'False', 'use_colors': 'True', 'log_path': 'C:\\Users\\TUF\\GeoPulse Hyper-Local Retail Mobility Analytics\\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\\dbt_project\\logs'}
+[0m17:23:28.263735 [debug] [MainThread]: Tracking: tracking
+[0m17:23:29.353802 [debug] [MainThread]: Snowflake adapter: Setting snowflake.connector to ERROR (file logging only)
+[0m17:23:29.354378 [debug] [MainThread]: Snowflake adapter: Setting botocore to ERROR (file logging only)
+[0m17:23:29.354773 [debug] [MainThread]: Snowflake adapter: Setting boto3 to ERROR (file logging only)
+[0m17:23:29.745944 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '6a6168ed-970a-4cef-b34c-0c96f7d15659', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002107F70EC40>]}
+[0m17:23:29.831145 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '6a6168ed-970a-4cef-b34c-0c96f7d15659', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002107D817350>]}
+[0m17:23:29.833568 [info ] [MainThread]: Registered adapter: snowflake=1.12.5
+[0m17:23:30.275436 [debug] [MainThread]: checksum: a51ebfa8ab21d9183453db914e99d7c3fa9dc1599494d9d66466612897169981, vars: {}, profile: geopulse, target: dev, version: 1.13.0b1
+[0m17:23:30.507955 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 0 files changed.
+[0m17:23:30.508446 [debug] [MainThread]: Nothing changed, skipping partial parsing.
+[0m17:23:30.508992 [debug] [MainThread]: Partial parsing enabled, no changes found, skipping parsing
+[0m17:23:30.520435 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '6a6168ed-970a-4cef-b34c-0c96f7d15659', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000210233FE350>]}
+[0m17:23:30.742274 [debug] [MainThread]: Wrote artifact WritableManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\manifest.json
+[0m17:23:30.747790 [debug] [MainThread]: Wrote artifact SemanticManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\semantic_manifest.json
+[0m17:23:30.833188 [debug] [MainThread]: Wrote artifact OsiDocument to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\osi_document.json
+[0m17:23:30.882620 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '6a6168ed-970a-4cef-b34c-0c96f7d15659', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002102356B6B0>]}
+[0m17:23:30.883432 [info ] [MainThread]: Found 4 models, 1 test, 2 sources, 563 macros
+[0m17:23:30.884198 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '6a6168ed-970a-4cef-b34c-0c96f7d15659', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000210235BCD70>]}
+[0m17:23:30.886509 [info ] [MainThread]: 
+[0m17:23:30.887064 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m17:23:30.887486 [info ] [MainThread]: 
+[0m17:23:30.888153 [debug] [MainThread]: Acquiring new snowflake connection 'master'
+[0m17:23:30.900788 [debug] [ThreadPool]: Acquiring new snowflake connection 'list_GEOPULSE_DB_DBT_STAGING'
+[0m17:23:30.939252 [debug] [ThreadPool]: Using snowflake connection "list_GEOPULSE_DB_DBT_STAGING"
+[0m17:23:30.939783 [debug] [ThreadPool]: On list_GEOPULSE_DB_DBT_STAGING: show objects in GEOPULSE_DB.DBT_STAGING
+    limit 10000
+    
+
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "connection_name": "list_GEOPULSE_DB_DBT_STAGING"} */;
+[0m17:23:30.940216 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m17:23:32.371124 [debug] [ThreadPool]: SQL status: SUCCESS 4 in 1.431 seconds
+[0m17:23:32.384579 [debug] [ThreadPool]: Using snowflake connection "list_GEOPULSE_DB_DBT_STAGING"
+[0m17:23:32.385265 [debug] [ThreadPool]: On list_GEOPULSE_DB_DBT_STAGING: show user functions in GEOPULSE_DB.DBT_STAGING
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "connection_name": "list_GEOPULSE_DB_DBT_STAGING"} */
+[0m17:23:32.547831 [debug] [ThreadPool]: SQL status: SUCCESS 0 in 0.162 seconds
+[0m17:23:32.553191 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '6a6168ed-970a-4cef-b34c-0c96f7d15659', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002102363CEF0>]}
+[0m17:23:32.559185 [debug] [Thread-1 (]: Began running node test.geopulse.assert_no_nulls_in_gps
+[0m17:23:32.559714 [info ] [Thread-1 (]: 1 of 1 START test assert_no_nulls_in_gps ....................................... [RUN]
+[0m17:23:32.560571 [debug] [Thread-1 (]: Acquiring new snowflake connection 'test.geopulse.assert_no_nulls_in_gps'
+[0m17:23:32.561017 [debug] [Thread-1 (]: Began compiling node test.geopulse.assert_no_nulls_in_gps
+[0m17:23:32.570022 [debug] [Thread-1 (]: Writing injected SQL for node "test.geopulse.assert_no_nulls_in_gps"
+[0m17:23:32.572080 [debug] [Thread-1 (]: Began executing node test.geopulse.assert_no_nulls_in_gps
+[0m17:23:32.604910 [debug] [Thread-1 (]: Writing runtime sql for node "test.geopulse.assert_no_nulls_in_gps"
+[0m17:23:32.606352 [debug] [Thread-1 (]: Using snowflake connection "test.geopulse.assert_no_nulls_in_gps"
+[0m17:23:32.606834 [debug] [Thread-1 (]: On test.geopulse.assert_no_nulls_in_gps: select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  SELECT *
+FROM GEOPULSE_DB.RAW.GPS_PINGS
+WHERE "device_id" IS NULL
+   OR "lat" IS NULL
+   OR "lon" IS NULL
+   OR "timestamp" IS NULL
+  
+  
+      
+    ) dbt_internal_test
+/* {"app": "dbt", "dbt_version": "1.13.0b1", "profile_name": "geopulse", "target_name": "dev", "node_id": "test.geopulse.assert_no_nulls_in_gps"} */
+[0m17:23:32.607226 [debug] [Thread-1 (]: Opening a new connection, currently in state init
+[0m17:23:33.784161 [debug] [Thread-1 (]: SQL status: SUCCESS 1 in 1.177 seconds
+[0m17:23:33.809735 [info ] [Thread-1 (]: 1 of 1 PASS assert_no_nulls_in_gps ............................................. [[32mPASS[0m in 1.25s]
+[0m17:23:33.811034 [debug] [Thread-1 (]: Finished running node test.geopulse.assert_no_nulls_in_gps
+[0m17:23:33.812954 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m17:23:33.813367 [debug] [MainThread]: Connection 'list_GEOPULSE_DB_DBT_STAGING' was left open.
+[0m17:23:33.813712 [debug] [MainThread]: On list_GEOPULSE_DB_DBT_STAGING: Close
+[0m17:23:34.458117 [debug] [MainThread]: Connection 'test.geopulse.assert_no_nulls_in_gps' was left open.
+[0m17:23:34.458716 [debug] [MainThread]: On test.geopulse.assert_no_nulls_in_gps: Close
+[0m17:23:34.798896 [info ] [MainThread]: 
+[0m17:23:34.799970 [info ] [MainThread]: Finished running 1 test in 0 hours 0 minutes and 3.91 seconds (3.91s).
+[0m17:23:34.801573 [debug] [MainThread]: Command end result
+[0m17:23:34.850563 [debug] [MainThread]: Wrote artifact WritableManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\manifest.json
+[0m17:23:34.853985 [debug] [MainThread]: Wrote artifact SemanticManifest to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\semantic_manifest.json
+[0m17:23:34.857234 [debug] [MainThread]: Wrote artifact OsiDocument to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\osi_document.json
+[0m17:23:34.867067 [debug] [MainThread]: Wrote artifact RunExecutionResult to C:\Users\TUF\GeoPulse Hyper-Local Retail Mobility Analytics\GeoPulse-Hyperlocal-Retail-Mobility-Analytics\dbt_project\target\run_results.json
+[0m17:23:34.867546 [info ] [MainThread]: 
+[0m17:23:34.868291 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m17:23:34.868870 [info ] [MainThread]: 
+[0m17:23:34.869496 [info ] [MainThread]: Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=1
+[0m17:23:34.870996 [debug] [MainThread]: Command `dbt test` succeeded at 17:23:34.870827 after 6.84 seconds
+[0m17:23:34.871443 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000021001884DD0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000021023665440>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000210236650D0>]}
+[0m17:23:34.871908 [debug] [MainThread]: Flushing usage events
+[0m17:23:36.578200 [debug] [MainThread]: An error was encountered while trying to flush usage events
