@@ -13,6 +13,7 @@ from data_loader import (
     get_mobility_summary,
     get_placeholder_hourly_mobility,
     get_store_footfall_data,
+    get_zone_summary,
     load_mobility_data,
 )
 
@@ -50,6 +51,16 @@ st.markdown(
             padding: 10px 14px;
             font-size: 0.9rem;
             color: #cbd5e1;
+            margin-bottom: 0.75rem;
+        }
+        .insight-banner {
+            background: rgba(16, 42, 67, 0.72);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(56, 189, 248, 0.28);
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 0.92rem;
+            color: #e0f2fe;
             margin-bottom: 1rem;
         }
     </style>
@@ -60,7 +71,7 @@ st.markdown(
 
 def main() -> None:
     st.title("GeoPulse Hyperlocal Retail Mobility Analytics")
-    st.caption("Day 6 Visualization Lead - Snowflake Hook, Engagement Index & CSV Export")
+    st.caption("Day 7 Visualization Lead - Zone Rollups, Store Rankings & Mobility Takeaways")
 
     with st.sidebar:
         st.header("Filters")
@@ -111,8 +122,15 @@ def main() -> None:
         hourly_df = hourly_df[hourly_df["hour"].between(17, 21)].reset_index(drop=True)
 
     summary = get_mobility_summary(hourly_df, stores_df)
+    zone_df = get_zone_summary(stores_df)
 
     st.markdown(f'<div class="status-banner">{source_status}</div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="insight-banner"><strong>Key Takeaway:</strong> Peak activity hits at '
+        f'<strong>{summary["peak_hour"]}</strong> ({summary["peak_pings"]}) on <strong>{day_type}s</strong>; '
+        f'top engagement leader in view: <strong>{summary["top_store"]}</strong>.</div>',
+        unsafe_allow_html=True,
+    )
 
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("Window GPS Pings", summary["window_pings"], f"{day_type} | {window_mode}")
@@ -120,9 +138,10 @@ def main() -> None:
     col3.metric("Peak Hour", summary["peak_hour"], summary["peak_pings"])
     col4.metric("Avg Store Dwell", summary["avg_dwell"], summary["avg_engagement"])
 
-    tab_overview, tab_stores, tab_pipeline = st.tabs([
+    tab_overview, tab_stores, tab_zones, tab_pipeline = st.tabs([
         "Overview & Day Comparison",
-        "Store Footfall & Engagement",
+        "Store Rankings & Dwell",
+        "Zone Rollup",
         "Staging & Pipeline",
     ])
 
@@ -155,7 +174,7 @@ def main() -> None:
             st.line_chart(compare_df, height=280)
 
     with tab_stores:
-        st.subheader("Estimated Store Footfall & Engagement Index")
+        st.subheader("Ranked Store Footfall & Engagement Index")
         if stores_df.empty:
             st.info("No stores match the current zone or minimum dwell filter.")
         else:
@@ -178,6 +197,14 @@ def main() -> None:
                 mime="text/csv",
             )
 
+    with tab_zones:
+        st.subheader("Zone-Level Footfall & Engagement Summary")
+        if zone_df.empty:
+            st.info("No zone metrics available for the active filter selection.")
+        else:
+            st.bar_chart(zone_df.set_index("zone")[["total_footfall", "avg_engagement_index"]], height=290)
+            st.dataframe(zone_df, width="stretch", hide_index=True)
+
     with tab_pipeline:
         st.subheader("Snowflake & dbt Staging Readiness")
         pipeline_df = pd.DataFrame({
@@ -189,7 +216,7 @@ def main() -> None:
             "Status": [
                 "View Built (Day 3)",
                 "View Built (Day 3)",
-                "Day 6 Snowflake Hook + Fallback Active",
+                "Day 7 Zone Rollup & Ranking Active",
             ],
             "Next Step": [
                 "Query live pings when loaded",

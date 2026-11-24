@@ -21,10 +21,16 @@ def _has_snowflake_env() -> bool:
     return all(bool(os.getenv(k, "").strip()) for k in required)
 
 
+def _normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
+    renamed = df.copy()
+    renamed.columns = [str(col).strip().lower() for col in renamed.columns]
+    return renamed
+
+
 @st.cache_data(ttl=120, show_spinner=False)
 def _fetch_snowflake_staging() -> tuple[pd.DataFrame | None, pd.DataFrame | None, str]:
     if not _has_snowflake_env():
-        return None, None, "Snowflake env vars not set; using Day 5 profile fallback"
+        return None, None, "Snowflake env vars not set; using Day 7 profile fallback"
 
     try:
         import snowflake.connector
@@ -43,6 +49,9 @@ def _fetch_snowflake_staging() -> tuple[pd.DataFrame | None, pd.DataFrame | None
             stores_df = pd.read_sql("SELECT * FROM GEOPULSE_DB.RAW.stg_stores LIMIT 5000", conn)
         finally:
             conn.close()
+
+        pings_df = _normalize_columns(pings_df)
+        stores_df = _normalize_columns(stores_df)
 
         if pings_df.empty and stores_df.empty:
             return None, None, "Connected to Snowflake, but staging tables are empty; using fallback"
@@ -101,7 +110,10 @@ def get_store_footfall_data(day_type: str = "Weekday") -> pd.DataFrame:
         np.where(df["avg_dwell_mins"] >= 15.0, "Browsing (15-22m)", "Quick Stop (<15m)"),
     )
     df["engagement_index"] = np.round((df["estimated_footfall"] * df["avg_dwell_mins"]) / 1000.0, 1)
+    df = df.sort_values("estimated_footfall", ascending=False).reset_index(drop=True)
+    df["footfall_rank"] = df.index + 1
     return df[[
+        "footfall_rank",
         "store_id",
         "store_name",
         "zone",
@@ -110,6 +122,26 @@ def get_store_footfall_data(day_type: str = "Weekday") -> pd.DataFrame:
         "avg_dwell_mins",
         "engagement_index",
     ]]
+
+
+def get_zone_summary(stores_df: pd.DataFrame) -> pd.DataFrame:
+    if stores_df.empty:
+        return pd.DataFrame(columns=["zone", "stores", "total_footfall", "avg_dwell_mins", "avg_engagement_index"])
+
+    grouped = (
+        stores_df.groupby("zone", as_index=False)
+        .agg(
+            stores=("store_id", "count"),
+            total_footfall=("estimated_footfall", "sum"),
+            avg_dwell_mins=("avg_dwell_mins", "mean"),
+            avg_engagement_index=("engagement_index", "mean"),
+        )
+        .sort_values("total_footfall", ascending=False)
+        .reset_index(drop=True)
+    )
+    grouped["avg_dwell_mins"] = grouped["avg_dwell_mins"].round(1)
+    grouped["avg_engagement_index"] = grouped["avg_engagement_index"].round(1)
+    return grouped
 
 
 def get_placeholder_hourly_mobility(
@@ -185,6 +217,12 @@ def get_mobility_summary(hourly_df: pd.DataFrame, stores_df: pd.DataFrame) -> di
     avg_dwell = float(stores_df["avg_dwell_mins"].mean()) if not stores_df.empty else 0.0
     avg_engagement = float(stores_df["engagement_index"].mean()) if not stores_df.empty else 0.0
 
+    if not stores_df.empty:
+        top_store_row = stores_df.sort_values("engagement_index", ascending=False).iloc[0]
+        top_store = f"{top_store_row['store_name']} ({top_store_row['engagement_index']} eng. idx)"
+    else:
+        top_store = "No matching stores"
+
     return {
         "window_pings": f"{total_pings:,}",
         "peak_hour": peak_hour,
@@ -193,4 +231,5 @@ def get_mobility_summary(hourly_df: pd.DataFrame, stores_df: pd.DataFrame) -> di
         "store_count": f"{len(stores_df)} stores in view",
         "avg_dwell": f"{avg_dwell:.1f} min",
         "avg_engagement": f"{avg_engagement:.1f} avg engagement",
+        "top_store": top_store,
     }
