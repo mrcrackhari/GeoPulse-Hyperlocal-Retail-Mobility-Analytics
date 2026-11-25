@@ -114,5 +114,4 @@ Command: `pytest tests -q`
 | **Total** | **Full Member 2 Test Suite** | **136 passed** |
 
 ### Spark UI Screenshot Placeholder
-Capture the Spark UI SQL/DAG tab (`http://localhost:4040`) showing `BroadcastIndexJoin` during a join run and save it here:
-- `docs/screenshots/spark_ui_broadcast_join.png`
+![alt text](image.png)
