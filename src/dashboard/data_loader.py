@@ -27,10 +27,40 @@ def _normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
     return renamed
 
 
+def _enrich_store_metrics(df: pd.DataFrame) -> pd.DataFrame:
+    enriched = df.copy()
+    enriched["dwell_segment"] = np.where(
+        enriched["avg_dwell_mins"] >= 22.0,
+        "High Engagement (>22m)",
+        np.where(enriched["avg_dwell_mins"] >= 15.0, "Browsing (15-22m)", "Quick Stop (<15m)"),
+    )
+    enriched["engagement_index"] = np.round(
+        (enriched["estimated_footfall"] * enriched["avg_dwell_mins"]) / 1000.0, 1
+    )
+    enriched = enriched.sort_values("estimated_footfall", ascending=False).reset_index(drop=True)
+    enriched["footfall_rank"] = enriched.index + 1
+    total_ff = float(enriched["estimated_footfall"].sum())
+    enriched["footfall_share_pct"] = (
+        np.round((enriched["estimated_footfall"] / total_ff) * 100.0, 1) if total_ff > 0 else 0.0
+    )
+    return enriched[[
+        "footfall_rank",
+        "store_id",
+        "store_name",
+        "zone",
+        "dwell_segment",
+        "estimated_footfall",
+        "footfall_share_pct",
+        "avg_dwell_mins",
+        "engagement_index",
+    ]]
+
+
 @st.cache_data(ttl=120, show_spinner=False)
-def _fetch_snowflake_staging() -> tuple[pd.DataFrame | None, pd.DataFrame | None, str]:
+def _fetch_snowflake_staging() -> tuple[pd.DataFrame | None, pd.DataFrame | None, dict[str, int], str]:
+    counts = {"stg_gps_pings_rows": 0, "stg_stores_rows": 0}
     if not _has_snowflake_env():
-        return None, None, "Snowflake env vars not set; using Day 7 profile fallback"
+        return None, None, counts, "Snowflake env vars not set; using Day 8 profile fallback"
 
     try:
         import snowflake.connector
@@ -45,19 +75,23 @@ def _fetch_snowflake_staging() -> tuple[pd.DataFrame | None, pd.DataFrame | None
             schema=os.getenv("SNOWFLAKE_SCHEMA", "RAW").strip(),
         )
         try:
-            pings_df = pd.read_sql("SELECT * FROM GEOPULSE_DB.RAW.stg_gps_pings LIMIT 50000", conn)
-            stores_df = pd.read_sql("SELECT * FROM GEOPULSE_DB.RAW.stg_stores LIMIT 5000", conn)
+            pings_df = _normalize_columns(
+                pd.read_sql("SELECT * FROM GEOPULSE_DB.RAW.stg_gps_pings LIMIT 50000", conn)
+            )
+            stores_df = _normalize_columns(
+                pd.read_sql("SELECT * FROM GEOPULSE_DB.RAW.stg_stores LIMIT 5000", conn)
+            )
         finally:
             conn.close()
 
-        pings_df = _normalize_columns(pings_df)
-        stores_df = _normalize_columns(stores_df)
+        counts["stg_gps_pings_rows"] = int(len(pings_df))
+        counts["stg_stores_rows"] = int(len(stores_df))
 
         if pings_df.empty and stores_df.empty:
-            return None, None, "Connected to Snowflake, but staging tables are empty; using fallback"
-        return pings_df, stores_df, "Live Snowflake GEOPULSE_DB.RAW staging data active"
+            return None, None, counts, "Connected to Snowflake, but staging tables are empty; using fallback"
+        return pings_df, stores_df, counts, "Live Snowflake GEOPULSE_DB.RAW staging data active"
     except Exception as exc:
-        return None, None, f"Snowflake fallback active ({type(exc).__name__})"
+        return None, None, counts, f"Snowflake fallback active ({type(exc).__name__})"
 
 
 @st.cache_data(show_spinner=False)
@@ -89,7 +123,7 @@ def _generate_hourly_series(seed: int, day_type: str) -> pd.DataFrame:
 @st.cache_data(show_spinner=False)
 def get_store_footfall_data(day_type: str = "Weekday") -> pd.DataFrame:
     weekend_factor = 1.14 if day_type == "Weekend" else 1.0
-    df = pd.DataFrame({
+    raw_df = pd.DataFrame({
         "store_id": ["ST-101", "ST-102", "ST-103", "ST-104", "ST-105", "ST-106"],
         "store_name": [
             "Hazratganj Flagship",
@@ -103,30 +137,15 @@ def get_store_footfall_data(day_type: str = "Weekday") -> pd.DataFrame:
         "base_footfall": [4820, 4390, 3710, 3480, 3290, 2940],
         "avg_dwell_mins": [24.5, 21.0, 16.5, 18.0, 12.5, 19.5],
     })
-    df["estimated_footfall"] = np.round(df["base_footfall"] * weekend_factor).astype(int)
-    df["dwell_segment"] = np.where(
-        df["avg_dwell_mins"] >= 22.0,
-        "High Engagement (>22m)",
-        np.where(df["avg_dwell_mins"] >= 15.0, "Browsing (15-22m)", "Quick Stop (<15m)"),
-    )
-    df["engagement_index"] = np.round((df["estimated_footfall"] * df["avg_dwell_mins"]) / 1000.0, 1)
-    df = df.sort_values("estimated_footfall", ascending=False).reset_index(drop=True)
-    df["footfall_rank"] = df.index + 1
-    return df[[
-        "footfall_rank",
-        "store_id",
-        "store_name",
-        "zone",
-        "dwell_segment",
-        "estimated_footfall",
-        "avg_dwell_mins",
-        "engagement_index",
-    ]]
+    raw_df["estimated_footfall"] = np.round(raw_df["base_footfall"] * weekend_factor).astype(int)
+    return _enrich_store_metrics(raw_df)
 
 
 def get_zone_summary(stores_df: pd.DataFrame) -> pd.DataFrame:
     if stores_df.empty:
-        return pd.DataFrame(columns=["zone", "stores", "total_footfall", "avg_dwell_mins", "avg_engagement_index"])
+        return pd.DataFrame(
+            columns=["zone", "stores", "total_footfall", "footfall_share_pct", "avg_dwell_mins", "avg_engagement_index"]
+        )
 
     grouped = (
         stores_df.groupby("zone", as_index=False)
@@ -139,9 +158,20 @@ def get_zone_summary(stores_df: pd.DataFrame) -> pd.DataFrame:
         .sort_values("total_footfall", ascending=False)
         .reset_index(drop=True)
     )
+    total_ff = float(grouped["total_footfall"].sum())
+    grouped["footfall_share_pct"] = (
+        np.round((grouped["total_footfall"] / total_ff) * 100.0, 1) if total_ff > 0 else 0.0
+    )
     grouped["avg_dwell_mins"] = grouped["avg_dwell_mins"].round(1)
     grouped["avg_engagement_index"] = grouped["avg_engagement_index"].round(1)
-    return grouped
+    return grouped[[
+        "zone",
+        "stores",
+        "total_footfall",
+        "footfall_share_pct",
+        "avg_dwell_mins",
+        "avg_engagement_index",
+    ]]
 
 
 def get_placeholder_hourly_mobility(
@@ -174,8 +204,8 @@ def load_mobility_data(
     zone_filter: str = "All Zones",
     min_dwell_mins: float = 0.0,
     day_type: str = "Weekday",
-) -> tuple[pd.DataFrame, pd.DataFrame, str]:
-    _, _, sf_msg = _fetch_snowflake_staging()
+) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, int], str]:
+    _, _, staging_counts, sf_msg = _fetch_snowflake_staging()
 
     hourly_df = get_placeholder_hourly_mobility(
         store_filter=store_filter,
@@ -196,11 +226,19 @@ def load_mobility_data(
             stores_df = matched
 
     stores_df = stores_df.reset_index(drop=True)
+    if not stores_df.empty:
+        total_filtered_ff = float(stores_df["estimated_footfall"].sum())
+        stores_df["footfall_share_pct"] = (
+            np.round((stores_df["estimated_footfall"] / total_filtered_ff) * 100.0, 1)
+            if total_filtered_ff > 0
+            else 0.0
+        )
+
     status = (
         f"{sf_msg} | {day_type} | Zone: {zone_filter} | "
         f"Store: {store_filter} | Min Dwell: {min_dwell_mins:.1f}m"
     )
-    return hourly_df, stores_df, status
+    return hourly_df, stores_df, staging_counts, status
 
 
 def get_mobility_summary(hourly_df: pd.DataFrame, stores_df: pd.DataFrame) -> dict[str, str]:

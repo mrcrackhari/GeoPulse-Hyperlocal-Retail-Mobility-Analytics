@@ -71,7 +71,7 @@ st.markdown(
 
 def main() -> None:
     st.title("GeoPulse Hyperlocal Retail Mobility Analytics")
-    st.caption("Day 7 Visualization Lead - Zone Rollups, Store Rankings & Mobility Takeaways")
+    st.caption("Day 8 Visualization Lead - Store Deep-Dive Drilldown, Footfall Share & Live Staging Diagnostics")
 
     with st.sidebar:
         st.header("Filters")
@@ -112,7 +112,7 @@ def main() -> None:
             key="min_dwell",
         )
 
-    hourly_df, stores_df, source_status = load_mobility_data(
+    hourly_df, stores_df, staging_counts, source_status = load_mobility_data(
         store_filter=selected_store,
         zone_filter=selected_zone,
         min_dwell_mins=min_dwell,
@@ -138,9 +138,10 @@ def main() -> None:
     col3.metric("Peak Hour", summary["peak_hour"], summary["peak_pings"])
     col4.metric("Avg Store Dwell", summary["avg_dwell"], summary["avg_engagement"])
 
-    tab_overview, tab_stores, tab_zones, tab_pipeline = st.tabs([
+    tab_overview, tab_stores, tab_drilldown, tab_zones, tab_pipeline = st.tabs([
         "Overview & Day Comparison",
-        "Store Rankings & Dwell",
+        "Store Rankings & Share",
+        "Store Deep-Dive",
         "Zone Rollup",
         "Staging & Pipeline",
     ])
@@ -197,6 +198,44 @@ def main() -> None:
                 mime="text/csv",
             )
 
+    with tab_drilldown:
+        st.subheader("Single-Store Hourly Benchmark vs. Zone Baseline")
+        if stores_df.empty:
+            st.info("No stores available for drill-down under the current filters.")
+        else:
+            drill_store = st.selectbox(
+                "Select Store to Benchmark",
+                options=stores_df["store_name"].tolist(),
+                index=0,
+            )
+            store_meta = stores_df[stores_df["store_name"] == drill_store].iloc[0]
+            store_zone = str(store_meta["zone"])
+
+            d_col1, d_col2, d_col3 = st.columns(3)
+            d_col1.metric("Store Footfall", f"{int(store_meta['estimated_footfall']):,}", f"{store_meta['footfall_share_pct']}% of filtered view")
+            d_col2.metric("Average Dwell", f"{store_meta['avg_dwell_mins']} min", str(store_meta["dwell_segment"]))
+            d_col3.metric("Engagement Index", f"{store_meta['engagement_index']}", f"Zone: {store_zone}")
+
+            store_hourly = get_placeholder_hourly_mobility(
+                store_filter=drill_store,
+                zone_filter=store_zone,
+                day_type=day_type,
+            )
+            zone_hourly = get_placeholder_hourly_mobility(
+                store_filter="All Stores",
+                zone_filter=store_zone,
+                day_type=day_type,
+            )
+            if window_mode == "Peak Hours (17:00-21:00)":
+                store_hourly = store_hourly[store_hourly["hour"].between(17, 21)]
+                zone_hourly = zone_hourly[zone_hourly["hour"].between(17, 21)]
+
+            benchmark_df = pd.DataFrame({
+                drill_store: store_hourly.set_index("hour_label")["gps_pings"],
+                f"{store_zone} Zone Baseline": zone_hourly.set_index("hour_label")["gps_pings"],
+            })
+            st.line_chart(benchmark_df, height=300)
+
     with tab_zones:
         st.subheader("Zone-Level Footfall & Engagement Summary")
         if zone_df.empty:
@@ -213,10 +252,15 @@ def main() -> None:
                 "GEOPULSE_DB.RAW.stg_stores",
                 "Dashboard Data Loader",
             ],
+            "Loaded Rows": [
+                staging_counts["stg_gps_pings_rows"],
+                staging_counts["stg_stores_rows"],
+                len(stores_df),
+            ],
             "Status": [
                 "View Built (Day 3)",
                 "View Built (Day 3)",
-                "Day 7 Zone Rollup & Ranking Active",
+                "Day 8 Drill-Down & Staging Diagnostics Active",
             ],
             "Next Step": [
                 "Query live pings when loaded",
