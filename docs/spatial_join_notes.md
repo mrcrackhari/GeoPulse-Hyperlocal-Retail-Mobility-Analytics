@@ -113,5 +113,5 @@ Command: `pytest tests -q`
 | `tests/test_catchment_analysis.py` | Catchment CSV schema, peak-hour tie-breaking, 4,000/2,000/600 ground-truth checks | PASS (7) |
 | **Total** | **Full Member 2 Test Suite** | **136 passed** |
 
-### Spark UI Screenshot Placeholder
-![alt text](image.png)
+### Spark UI Execution Plan
+![Spark UI BroadcastIndexJoin](spark_ui_broadcast_join.png)
