@@ -10,6 +10,7 @@ if str(DASHBOARD_DIR) not in sys.path:
     sys.path.insert(0, str(DASHBOARD_DIR))
 
 from data_loader import (
+    get_clean_merged_dataset,
     get_mobility_summary,
     get_placeholder_hourly_mobility,
     get_store_footfall_data,
@@ -71,7 +72,7 @@ st.markdown(
 
 def main() -> None:
     st.title("GeoPulse Hyperlocal Retail Mobility Analytics")
-    st.caption("Day 8 Visualization Lead - Store Deep-Dive Drilldown, Footfall Share & Live Staging Diagnostics")
+    st.caption("Day 9 Visualization Lead - Geospatial Hotspot Map, Store Deep-Dive & Merged Dataset Export")
 
     with st.sidebar:
         st.header("Filters")
@@ -138,8 +139,9 @@ def main() -> None:
     col3.metric("Peak Hour", summary["peak_hour"], summary["peak_pings"])
     col4.metric("Avg Store Dwell", summary["avg_dwell"], summary["avg_engagement"])
 
-    tab_overview, tab_stores, tab_drilldown, tab_zones, tab_pipeline = st.tabs([
+    tab_overview, tab_map, tab_stores, tab_drilldown, tab_zones, tab_pipeline = st.tabs([
         "Overview & Day Comparison",
+        "Geospatial Hotspot Map",
         "Store Rankings & Share",
         "Store Deep-Dive",
         "Zone Rollup",
@@ -174,6 +176,34 @@ def main() -> None:
             })
             st.line_chart(compare_df, height=280)
 
+    with tab_map:
+        st.subheader("Hyperlocal Retail Mobility Hotspot Map")
+        if stores_df.empty:
+            st.info("No store coordinates available for the active filter selection.")
+        else:
+            st.map(
+                stores_df,
+                latitude="lat",
+                longitude="lon",
+                size="marker_size",
+                color="marker_color",
+                height=420,
+            )
+            st.dataframe(
+                stores_df[[
+                    "footfall_rank",
+                    "store_name",
+                    "zone",
+                    "lat",
+                    "lon",
+                    "estimated_footfall",
+                    "avg_dwell_mins",
+                    "engagement_index",
+                ]],
+                width="stretch",
+                hide_index=True,
+            )
+
     with tab_stores:
         st.subheader("Ranked Store Footfall & Engagement Index")
         if stores_df.empty:
@@ -189,12 +219,15 @@ def main() -> None:
             )
             st.bar_chart(segment_counts.set_index("dwell_segment")[["stores"]], height=220)
 
-            st.dataframe(stores_df, width="stretch", hide_index=True)
-            csv_bytes = stores_df.to_csv(index=False).encode("utf-8")
+            display_stores = stores_df.drop(columns=["marker_size", "marker_color"])
+            st.dataframe(display_stores, width="stretch", hide_index=True)
+
+            merged_clean_df = get_clean_merged_dataset(day_type=day_type)
+            csv_bytes = merged_clean_df.to_csv(index=False).encode("utf-8")
             st.download_button(
-                label="Download Filtered Store Metrics (CSV)",
+                label="Download Clean Merged Store & Peak Dataset (CSV)",
                 data=csv_bytes,
-                file_name=f"geopulse_store_metrics_{day_type.lower()}.csv",
+                file_name=f"geopulse_clean_merged_{day_type.lower()}.csv",
                 mime="text/csv",
             )
 
@@ -212,7 +245,11 @@ def main() -> None:
             store_zone = str(store_meta["zone"])
 
             d_col1, d_col2, d_col3 = st.columns(3)
-            d_col1.metric("Store Footfall", f"{int(store_meta['estimated_footfall']):,}", f"{store_meta['footfall_share_pct']}% of filtered view")
+            d_col1.metric(
+                "Store Footfall",
+                f"{int(store_meta['estimated_footfall']):,}",
+                f"{store_meta['footfall_share_pct']}% of filtered view",
+            )
             d_col2.metric("Average Dwell", f"{store_meta['avg_dwell_mins']} min", str(store_meta["dwell_segment"]))
             d_col3.metric("Engagement Index", f"{store_meta['engagement_index']}", f"Zone: {store_zone}")
 
@@ -260,7 +297,7 @@ def main() -> None:
             "Status": [
                 "View Built (Day 3)",
                 "View Built (Day 3)",
-                "Day 8 Drill-Down & Staging Diagnostics Active",
+                "Day 9 Geospatial Map & Merged Export Active",
             ],
             "Next Step": [
                 "Query live pings when loaded",

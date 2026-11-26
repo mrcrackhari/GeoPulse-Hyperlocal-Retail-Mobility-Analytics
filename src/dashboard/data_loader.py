@@ -15,6 +15,15 @@ ZONE_PROFILES: dict[str, dict[str, float]] = {
     "North": {"multiplier": 0.82, "weekend_boost": 1.05},
 }
 
+ZONE_COLORS: dict[str, str] = {
+    "Central": "#38bdf8",
+    "East": "#34d399",
+    "South": "#fbbf24",
+    "North-East": "#a78bfa",
+    "South-Central": "#f87171",
+    "North": "#fb923c",
+}
+
 
 def _has_snowflake_env() -> bool:
     required = ["SNOWFLAKE_ACCOUNT", "SNOWFLAKE_USER", "SNOWFLAKE_PASSWORD"]
@@ -43,16 +52,22 @@ def _enrich_store_metrics(df: pd.DataFrame) -> pd.DataFrame:
     enriched["footfall_share_pct"] = (
         np.round((enriched["estimated_footfall"] / total_ff) * 100.0, 1) if total_ff > 0 else 0.0
     )
+    enriched["marker_size"] = np.clip((enriched["estimated_footfall"] / 18.0), 80, 320).round(0)
+    enriched["marker_color"] = enriched["zone"].map(ZONE_COLORS).fillna("#38bdf8")
     return enriched[[
         "footfall_rank",
         "store_id",
         "store_name",
         "zone",
+        "lat",
+        "lon",
         "dwell_segment",
         "estimated_footfall",
         "footfall_share_pct",
         "avg_dwell_mins",
         "engagement_index",
+        "marker_size",
+        "marker_color",
     ]]
 
 
@@ -60,7 +75,7 @@ def _enrich_store_metrics(df: pd.DataFrame) -> pd.DataFrame:
 def _fetch_snowflake_staging() -> tuple[pd.DataFrame | None, pd.DataFrame | None, dict[str, int], str]:
     counts = {"stg_gps_pings_rows": 0, "stg_stores_rows": 0}
     if not _has_snowflake_env():
-        return None, None, counts, "Snowflake env vars not set; using Day 8 profile fallback"
+        return None, None, counts, "Snowflake env vars not set; using Day 9 spatial profile fallback"
 
     try:
         import snowflake.connector
@@ -134,6 +149,8 @@ def get_store_footfall_data(day_type: str = "Weekday") -> pd.DataFrame:
             "Mahanagar Corner",
         ],
         "zone": ["Central", "East", "South", "North-East", "South-Central", "North"],
+        "lat": [26.8467, 26.8500, 26.8128, 26.8820, 26.8318, 26.8765],
+        "lon": [80.9462, 80.9990, 80.9014, 80.9862, 80.9196, 80.9570],
         "base_footfall": [4820, 4390, 3710, 3480, 3290, 2940],
         "avg_dwell_mins": [24.5, 21.0, 16.5, 18.0, 12.5, 19.5],
     })
@@ -239,6 +256,28 @@ def load_mobility_data(
         f"Store: {store_filter} | Min Dwell: {min_dwell_mins:.1f}m"
     )
     return hourly_df, stores_df, staging_counts, status
+
+
+def get_clean_merged_dataset(day_type: str = "Weekday") -> pd.DataFrame:
+    """Builds a clean store-level + peak-hour summary dataset ready for CSV export or downstream checks."""
+    stores_df = get_store_footfall_data(day_type=day_type).copy()
+    peak_pings: list[int] = []
+    peak_hours: list[str] = []
+
+    for _, row in stores_df.iterrows():
+        s_hourly = get_placeholder_hourly_mobility(
+            store_filter=str(row["store_name"]),
+            zone_filter=str(row["zone"]),
+            day_type=day_type,
+        )
+        peak_row = s_hourly.loc[s_hourly["gps_pings"].idxmax()]
+        peak_pings.append(int(peak_row["gps_pings"]))
+        peak_hours.append(str(peak_row["hour_label"]))
+
+    stores_df["day_type"] = day_type
+    stores_df["peak_hour"] = peak_hours
+    stores_df["peak_hourly_pings"] = peak_pings
+    return stores_df.drop(columns=["marker_size", "marker_color"])
 
 
 def get_mobility_summary(hourly_df: pd.DataFrame, stores_df: pd.DataFrame) -> dict[str, str]:
