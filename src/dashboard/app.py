@@ -72,7 +72,7 @@ st.markdown(
 
 def main() -> None:
     st.title("GeoPulse Hyperlocal Retail Mobility Analytics")
-    st.caption("Day 9 Visualization Lead - Geospatial Hotspot Map, Store Deep-Dive & Merged Dataset Export")
+    st.caption("Day 10 Visualization Lead - EDA Findings Summary, Hotspot Map & Staging Readiness")
 
     with st.sidebar:
         st.header("Filters")
@@ -139,12 +139,13 @@ def main() -> None:
     col3.metric("Peak Hour", summary["peak_hour"], summary["peak_pings"])
     col4.metric("Avg Store Dwell", summary["avg_dwell"], summary["avg_engagement"])
 
-    tab_overview, tab_map, tab_stores, tab_drilldown, tab_zones, tab_pipeline = st.tabs([
+    tab_overview, tab_map, tab_stores, tab_drilldown, tab_zones, tab_eda, tab_pipeline = st.tabs([
         "Overview & Day Comparison",
         "Geospatial Hotspot Map",
         "Store Rankings & Share",
         "Store Deep-Dive",
         "Zone Rollup",
+        "EDA Findings",
         "Staging & Pipeline",
     ])
 
@@ -281,6 +282,21 @@ def main() -> None:
             st.bar_chart(zone_df.set_index("zone")[["total_footfall", "avg_engagement_index"]], height=290)
             st.dataframe(zone_df, width="stretch", hide_index=True)
 
+    with tab_eda:
+        st.subheader("Day 10 Exploratory Data Analysis Summary")
+        top_zone_text = (
+            f"{zone_df.iloc[0]['zone']} ({int(zone_df.iloc[0]['total_footfall']):,} footfall)"
+            if not zone_df.empty else "N/A"
+        )
+        st.markdown(
+            f"""
+            * **Active Profile & Window:** `{day_type}` across `{window_mode}` with `{summary["window_pings"]}` total GPS pings and peak hour at `{summary["peak_hour"]}`.
+            * **Top Engagement Store:** `{summary["top_store"]}` leads engagement in the current view (`{summary["store_count"]}`, average dwell `{summary["avg_dwell"]}`).
+            * **Leading Zone in View:** `{top_zone_text}`.
+            * **Documentation File:** Saved at `docs/day10_eda_summary.md` for sprint review and team handoff.
+            """
+        )
+
     with tab_pipeline:
         st.subheader("Snowflake & dbt Staging Readiness")
         pipeline_df = pd.DataFrame({
@@ -297,7 +313,7 @@ def main() -> None:
             "Status": [
                 "View Built (Day 3)",
                 "View Built (Day 3)",
-                "Day 9 Geospatial Map & Merged Export Active",
+                "Day 10 EDA Summary & Map Active",
             ],
             "Next Step": [
                 "Query live pings when loaded",
